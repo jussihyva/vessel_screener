@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/06 07:42:34 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/07 00:47:40 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,10 @@ typedef enum		e_error_code
 	e_invalid_check_sum
 }					t_error_code;
 
+typedef struct		s_message_id
+{
+	unsigned char		message_id_1;
+	unsigned char		message_id_2;
+	unsigned int		latitude;
+}					t_message_id;
 #endif
