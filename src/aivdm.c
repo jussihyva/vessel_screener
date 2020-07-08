@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/08 18:59:40 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/08 19:32:35 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,22 +71,22 @@ static size_t	print_record(char **aivdm_record_array)
 	return (i);
 }
 
-static void		print_bits(size_t size, void *ptr)
-{
-	unsigned char *data = (unsigned char *)ptr;
-	unsigned char bit;
-	int byte, shift;
-	for (byte = size-1; byte >= 0; byte--)
-	{
-		for (shift = 7; shift >= 0; shift--)
-		{
-			bit = (data[byte] >> shift) & 1;
-			ft_printf("%u", bit);
-		}
-	}
-	ft_printf("\n");
-	return ;
-}
+// static void		print_bits(size_t size, void *ptr)
+// {
+// 	unsigned char *data = (unsigned char *)ptr;
+// 	unsigned char bit;
+// 	int byte, shift;
+// 	for (byte = size-1; byte >= 0; byte--)
+// 	{
+// 		for (shift = 7; shift >= 0; shift--)
+// 		{
+// 			bit = (data[byte] >> shift) & 1;
+// 			ft_printf("%u", bit);
+// 		}
+// 	}
+// 	ft_printf("\n");
+// 	return ;
+// }
 
 static char		*ais_encoder(t_stream *payload_data, size_t payload_data_size)
 {
@@ -115,8 +115,8 @@ static char		*ais_encoder(t_stream *payload_data, size_t payload_data_size)
 		ais_data[i * 3 + 1] = ((payload_data[i].char_2 & 0x0f) << 4)+ ((payload_data[i].char_3 & 0x3c) >> 2);
 		ais_data[i * 3 + 2] = ((payload_data[i].char_3 & 0x03) << 6) + ((payload_data[i].char_4 & 0x3f) << 0);
 	}
-	print_hex(ais_data, 6);
-	print_bin(ais_data, 18);
+//	print_hex(ais_data, 6);
+//	print_bin(ais_data, 18);
 	return (ais_data);
 }
 
@@ -160,31 +160,19 @@ int				main()
 		ft_memcpy(payload_data, aivdm_record_array[5], ft_strlen(aivdm_record_array[5]));
 		ais_data = ais_encoder(payload_data, payload_data_size);
 		ft_memcpy(message_id, ais_data, sizeof(*message_id));
-		if ((int)message_id->message_id == 1)
+		if ((int)message_id->message_id > 0  && (int)message_id->message_id < 8)
 		{
 			record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
-			print_bits(6, payload_data);
-			print_hex((char *)payload_data, 6);
-			print_bits(6, payload_data);
-			ft_printf("%d\n", (int)message_id->message_id);
 			ft_memcpy(record_123, ais_data, sizeof(*record_123));
-			print_hex((char *)record_123, 6);
 			print_payload(aivdm_record_array[0]);
-			ft_printf("%s\n", line);
-			mmsi = *(int *)record_123->mmsi3 << 22;
+			mmsi = (int)record_123->mmsi3 << 22;
 			mmsi += (int)record_123->mmsi2 << 14 ;
 			mmsi += (int)record_123->mmsi1 << 6;
 			mmsi += (int)record_123->mmsi0;
-			ft_printf("Message ID: %ld %x %x\n", mmsi,
-												record_123->message_id,
-												sizeof(*payload_data));
-			print_bits(6, record_123);
-			print_bin((char *)record_123, 16);
-			print_bin((char *)&mmsi, 4);
-			print_bits(4, &mmsi);
+			ft_printf("MMSI: %-9d,  Message: %x\n", mmsi, record_123->message_id);
 		}
-		else
-			ft_printf("%d\n", message_id->message_id);
+		// else
+		// 	ft_printf("%d\n", message_id->message_id);
 		ft_strdel(&line);
 	}
 	return (0);
