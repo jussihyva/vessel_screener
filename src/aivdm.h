@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/08 18:49:20 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/08 19:19:36 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct		s_record_123
 {
 	unsigned char		dummy_1		:	2,
 						message_id	:	6;
-	unsigned char		*mmsi3;
+	unsigned char		mmsi3;
 	unsigned char		mmsi2;
 	unsigned char		mmsi1;
 	unsigned char		dummy_2		:	2,
