@@ -3,21 +3,21 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+         #
+#    By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/05 11:36:37 by ubuntu            #+#    #+#              #
-#    Updated: 2020/07/05 21:29:53 by ubuntu           ###   ########.fr        #
+#    Updated: 2020/07/08 11:54:42 by jkauppi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	aivdm
-CC			=	clang
+CC			=	gcc
 C_FLAGS		=	-g -Wall -Werror -Wextra
 LIB_FOLDER	=	lib
 INCLUDES	=	-I $(LIB_FOLDER)
 LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf
 
-SRC			=	
+SRC			=	print_hex.c
 
 HEADERS		=	aivdm.h
 
