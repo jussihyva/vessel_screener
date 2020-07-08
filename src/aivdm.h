@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/07 00:47:40 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/08 18:49:20 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,34 @@ typedef enum		e_error_code
 	e_invalid_check_sum
 }					t_error_code;
 
+typedef struct		s_stream
+{
+	 char			char_1;
+	 char			char_2;
+	 char			char_3;
+	 char			char_4;
+}					t_stream;
+
 typedef struct		s_message_id
 {
-	unsigned char		message_id_1;
-	unsigned char		message_id_2;
-	unsigned int		latitude;
+	unsigned char		dummy_1		:	2,
+						message_id	:	6;
 }					t_message_id;
+
+typedef struct		s_record_123
+{
+	unsigned char		dummy_1		:	2,
+						message_id	:	6;
+	unsigned char		*mmsi3;
+	unsigned char		mmsi2;
+	unsigned char		mmsi1;
+	unsigned char		dummy_2		:	2,
+						mmsi0		: 	6;
+//	unsigned int		navigational_status	:	4;
+//	unsigned int		dummy_3	:	6;
+}					t_record_123;
+
+void				print_hex(char *file_content, ssize_t size);
+void				print_bin(char *file_content, ssize_t size);
+
 #endif
