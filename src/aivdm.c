@@ -6,15 +6,17 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/08 19:32:35 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/09 12:40:44 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
 
-static void		print_payload(char *payload)
+static void		print_payload(t_record_123 *record_123, char *line)
 {
-	(void)payload;
+	ft_printf("%s\n", line);
+	ft_printf("Size of record 123: %d\n", sizeof(*record_123));
+	print_bin((char *)record_123, sizeof(*record_123));
 	return ;
 }
 
@@ -129,6 +131,39 @@ static char		*ais_encoder(t_stream *payload_data, size_t payload_data_size)
 // 	return ;
 // }
 
+static void		count_messages(t_message *message, t_message_id *message_id)
+{
+	static int	counter;
+	int			message_type;
+	size_t		i;
+	size_t		max;
+	size_t		max_id;
+
+	message_type = (int)message_id->message_id;
+	message->type_counter[message_type]++;
+	counter++;
+	if (!(counter % 20))
+	{
+		i = -1;
+		while (++i < MAX_NUM_OF_MESSAGE_TYPES)
+			ft_printf("%4d", i);
+		ft_printf("\n");
+		max = 0;
+		i = -1;
+		while (++i < MAX_NUM_OF_MESSAGE_TYPES)
+		{
+			ft_printf("%4d", message->type_counter[i]);
+			if (max <= message->type_counter[i])
+			{
+				max = message->type_counter[i];
+				max_id = i;
+			}
+		}
+		ft_printf("\n");
+		ft_printf("Most frequent message type: %d\n", max_id);
+	}
+	return ;
+}
 int				main()
 {
 	char			*line;
@@ -141,9 +176,11 @@ int				main()
 	t_record_123	*record_123;
 	char			*ais_data;
 	int				mmsi;
+	t_message		*message;
 
 	line = NULL;
 	ok_cnt = 0;
+	message = (t_message *)ft_memalloc(sizeof(*message));
 	message_id = (t_message_id *)ft_memalloc(sizeof(*message_id));
 	while (1)
 	{
@@ -160,16 +197,20 @@ int				main()
 		ft_memcpy(payload_data, aivdm_record_array[5], ft_strlen(aivdm_record_array[5]));
 		ais_data = ais_encoder(payload_data, payload_data_size);
 		ft_memcpy(message_id, ais_data, sizeof(*message_id));
+		count_messages(message, message_id);
 		if ((int)message_id->message_id > 0  && (int)message_id->message_id < 8)
 		{
-			record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
-			ft_memcpy(record_123, ais_data, sizeof(*record_123));
-			print_payload(aivdm_record_array[0]);
-			mmsi = (int)record_123->mmsi3 << 22;
-			mmsi += (int)record_123->mmsi2 << 14 ;
-			mmsi += (int)record_123->mmsi1 << 6;
-			mmsi += (int)record_123->mmsi0;
-			ft_printf("MMSI: %-9d,  Message: %x\n", mmsi, record_123->message_id);
+			if ((t_message_type)message_id->message_id == e_1_position_report)
+			{
+				record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
+				ft_memcpy(record_123, ais_data, sizeof(*record_123));
+				print_payload(record_123, line);
+				mmsi = (int)record_123->mmsi3 << 22;
+				mmsi += (int)record_123->mmsi2 << 14 ;
+				mmsi += (int)record_123->mmsi1 << 6;
+				mmsi += (int)record_123->mmsi0;
+				ft_printf("MMSI: %-9d,  Message: %x\n", mmsi, record_123->message_id);
+			}
 		}
 		// else
 		// 	ft_printf("%d\n", message_id->message_id);

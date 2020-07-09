@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/08 19:19:36 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/09 12:40:29 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 
 # define PRINT_OK 500
 # define NUM_OF_FIELDS 7
+# define MAX_NUM_OF_MESSAGE_TYPES 50
+
+typedef enum		e_message_type
+{
+	e_1_position_report = 1
+}					t_message_type;
 
 typedef enum		e_error_code
 {
@@ -37,6 +43,12 @@ typedef struct		s_message_id
 	unsigned char		dummy_1		:	2,
 						message_id	:	6;
 }					t_message_id;
+
+typedef struct		s_message
+{
+	size_t			type_counter[MAX_NUM_OF_MESSAGE_TYPES];
+}					t_message;
+
 
 typedef struct		s_record_123
 {
