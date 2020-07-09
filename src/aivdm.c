@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 00:18:40 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/10 00:50:34 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static int		validate_record(char **aivdm_record_array, char *line,
 // 	return ;
 // }
 
-static char		*ais_encoder(char *payload_string)
+static char		*ais_encoder(char *payload_string, int payload_string_length, char *crc_string)
 {
 	size_t		i;
 	size_t		j;
@@ -76,10 +76,15 @@ static char		*ais_encoder(char *payload_string)
 	size_t		payload_data_size;
 	char		*ais_data;
 	size_t		ais_data_size;
+	int			padding;
 
-	payload_data_size = (ft_strlen(payload_string) - 1) / 4 + 1;
+	padding = crc_string[0] - '0';
+	padding = padding;
+	// if (padding)
+	// 	ft_printf("Padding: %d\n", padding);
+	payload_data_size = payload_string_length / 4 + (payload_string_length % 4);
 	payload_data = (t_stream *)ft_memalloc(sizeof(*payload_data) * payload_data_size);
-	ft_memcpy(payload_data, payload_string, ft_strlen(payload_string));
+	ft_memcpy(payload_data, payload_string, payload_string_length);
 	ais_data_size = (sizeof(*payload_data)) * payload_data_size * 3 / 4;
 	ais_data = (char *)ft_memalloc(sizeof(*ais_data) * ais_data_size);
 	i = -1;
@@ -208,6 +213,8 @@ int				main(int argc, char **argv)
 	t_message		*message;
 	t_opt			*opt;
 	char			*payload_string;
+	int				payload_string_length;
+	char			*padding;
 
 	ft_step_args(&argc, &argv);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
@@ -230,7 +237,9 @@ int				main(int argc, char **argv)
 		if (*aivdm_record_array[2] != '1')
 			continue ;
 		payload_string = aivdm_record_array[5];
-		ais_data = ais_encoder(payload_string);
+		payload_string_length = ft_strlen(payload_string);
+		padding = aivdm_record_array[6];
+		ais_data = ais_encoder(payload_string, payload_string_length, padding);
 		ft_memcpy(message_id, ais_data, sizeof(*message_id));
 		count_messages(message, message_id);
 		if ((int)message_id->message_id > 0  &&
