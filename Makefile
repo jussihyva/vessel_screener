@@ -6,7 +6,7 @@
 #    By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/05 11:36:37 by ubuntu            #+#    #+#              #
-#    Updated: 2020/07/09 17:01:38 by jkauppi          ###   ########.fr        #
+#    Updated: 2020/07/10 11:23:17 by jkauppi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ LIB_FOLDER	=	lib
 INCLUDES	=	-I $(LIB_FOLDER)
 LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf
 
-SRC			=	print_hex.c input.c
+SRC			=	print_hex.c input.c memory.c
 
 HEADERS		=	aivdm.h
 

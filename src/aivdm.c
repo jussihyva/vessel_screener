@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 00:50:34 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/10 16:06:38 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,27 +28,28 @@ static int		validate_record(char **aivdm_record_array, char *line,
 	size_t			number_of_fields;
 	char			validate_char;
 
+	(void)line;
 	error = 0;
 	number_of_fields = -1;
 	while (aivdm_record_array[++number_of_fields])
 		;
-	validate_char = aivdm_record_array[number_of_fields - 1][1];
-	if (validate_char != '*' || number_of_fields != NUM_OF_FIELDS)
-	{
-		if (number_of_fields != NUM_OF_FIELDS)
-			error = e_invalid_num_of_fields;
-		else
-			error = e_invalid_check_sum;
-		ft_printf("ERROR (%s)\n", line);
-		return (error);
-	}
+	if (number_of_fields != NUM_OF_FIELDS)
+		error = e_invalid_num_of_fields;
 	else
 	{
-		(*ok_cnt)++;
-		if (!(*ok_cnt % PRINT_OK))
-			ft_printf("OK (%d)\n", *ok_cnt);
-		return (error);
+		validate_char = aivdm_record_array[number_of_fields - 1][1];
+		if (validate_char != '*')
+			error = e_invalid_check_sum;
+		else
+		{
+			(*ok_cnt)++;
+			if (!(*ok_cnt % PRINT_OK))
+				ft_printf("OK (%d)\n", *ok_cnt);
+		}
 	}
+	if (error && *line)
+		ft_printf("ERROR (%s)\n", line);
+	return (error);
 }
 
 // static void		print_bits(size_t size, void *ptr)
@@ -81,7 +82,10 @@ static char		*ais_encoder(char *payload_string, int payload_string_length, char 
 	padding = crc_string[0] - '0';
 	padding = padding;
 	// if (padding)
-	// 	ft_printf("Padding: %d\n", padding);
+	// {
+	// 	ft_printf("Padding: %d String length: %d\n", padding, payload_string_length);
+	// 	ft_printf("Payload: %s\n", payload_string);
+	// }
 	payload_data_size = payload_string_length / 4 + (payload_string_length % 4);
 	payload_data = (t_stream *)ft_memalloc(sizeof(*payload_data) * payload_data_size);
 	ft_memcpy(payload_data, payload_string, payload_string_length);
@@ -107,15 +111,6 @@ static char		*ais_encoder(char *payload_string, int payload_string_length, char 
 	free(payload_data);
 	return (ais_data);
 }
-
-// static void		create_ais_converter_table(void)
-// {
-// 	char		*ais_conv_table;
-
-// 	ais_conv_table = (char *)ft_memalloc(sizeof(*ais_conv_table) * 256);
-// 	ais_conv_table['0'] = 1;
-// 	return ;
-// }
 
 static void		count_messages(t_message *message, t_message_id *message_id)
 {
@@ -213,8 +208,10 @@ int				main(int argc, char **argv)
 	t_message		*message;
 	t_opt			*opt;
 	char			*payload_string;
+	char			*payload_string_tmp;
 	int				payload_string_length;
 	char			*padding;
+	double			sog;
 
 	ft_step_args(&argc, &argv);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
@@ -222,52 +219,70 @@ int				main(int argc, char **argv)
 	line = NULL;
 	ok_cnt = 0;
 	message = (t_message *)ft_memalloc(sizeof(*message));
-	message->type_counter = (int *)ft_memalloc(sizeof(*message->type_counter) * MAX_NUM_OF_MESSAGE_TYPES);
-	message->mmsi_mid_counter = (int *)ft_memalloc(sizeof(*message->mmsi_mid_counter) * COUNTRIES);
 	message_id = (t_message_id *)ft_memalloc(sizeof(*message_id));
-	while (1)
+	while (ft_get_next_line(opt->fd, &line))
 	{
-		ft_get_next_line(opt->fd, &line);
-		if (!(*line))
-			break ;
 //		ft_printf("%s\n", line);
 		aivdm_record_array = (char **)ft_strsplit(line, ',');
-		if (validate_record(aivdm_record_array, line, &ok_cnt))
-			break ;
-		if (*aivdm_record_array[2] != '1')
-			continue ;
-		payload_string = aivdm_record_array[5];
-		payload_string_length = ft_strlen(payload_string);
-		padding = aivdm_record_array[6];
-		ais_data = ais_encoder(payload_string, payload_string_length, padding);
-		ft_memcpy(message_id, ais_data, sizeof(*message_id));
-		count_messages(message, message_id);
-		if ((int)message_id->message_id > 0  &&
-												(int)message_id->message_id < 8)
+		if (!validate_record(aivdm_record_array, line, &ok_cnt))
 		{
-			if ((t_message_type)message_id->message_id == e_1_position_report)
+			if (*aivdm_record_array[2] == '1')
 			{
-				record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
-				ft_memcpy(record_123, ais_data, sizeof(*record_123));
-				mmsi = (size_t)record_123->mmsi3 << 22;
-				mmsi += (size_t)record_123->mmsi2 << 14 ;
-				mmsi += (size_t)record_123->mmsi1 << 6;
-				mmsi += (size_t)record_123->mmsi0;
-				mmsi_mid = mmsi;
-				if (mmsi_mid < 1000)
-					print_payload(record_123, line, mmsi);
-				while (mmsi_mid >= 1000)
-					mmsi_mid /= 10;
-				count_mmsi_mid(message, mmsi_mid);
-				free(record_123);
+				payload_string = ft_strdup(aivdm_record_array[5]);
+//				ft_printf("%s\n", line);
+			}
+			else
+			{
+				payload_string_tmp = payload_string;
+				payload_string = ft_strjoin(payload_string_tmp, aivdm_record_array[5]);
+				ft_strdel(&payload_string_tmp);
+			}
+			if (*aivdm_record_array[2] == *aivdm_record_array[1])
+			{
+				payload_string_length = ft_strlen(payload_string);
+				padding = aivdm_record_array[6];
+				ais_data = ais_encoder(payload_string, payload_string_length, padding);
+				ft_memcpy(message_id, ais_data, sizeof(*message_id));
+				count_messages(message, message_id);
+				if ((int)message_id->message_id > 0  &&
+														(int)message_id->message_id < 8)
+				{
+					if ((t_message_type)message_id->message_id == e_1_position_report)
+					{
+						record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
+						ft_memcpy(record_123, ais_data, sizeof(*record_123));
+						mmsi = (size_t)record_123->mmsi3 << 22;
+						mmsi += (size_t)record_123->mmsi2 << 14 ;
+						mmsi += (size_t)record_123->mmsi1 << 6;
+						mmsi += (size_t)record_123->mmsi0;
+						sog = (double)((size_t)record_123->speed_over_ground_1 << 4);
+						sog += (double)record_123->speed_over_ground_0;
+						sog /= 10;
+						ft_printf("SOG: %.1f\n", sog);
+						if (sog)
+							ft_printf("%s\n", line);
+						mmsi_mid = mmsi;
+						if (mmsi_mid < 1000)
+							print_payload(record_123, line, mmsi);
+						while (mmsi_mid >= 1000)
+							mmsi_mid /= 10;
+						count_mmsi_mid(message, mmsi_mid);
+						free(record_123);
+					}
+				}
+				ft_strdel(&payload_string);
+				free(ais_data);
 			}
 		}
-		// else
-		// 	ft_printf("%d\n", message_id->message_id);
 		ft_strdel(&line);
-		free(aivdm_record_array);
-		free(ais_data);
+		release_string_array(aivdm_record_array);
 	}
+	ft_strdel(&payload_string);
+	ft_strdel(&line);
+	free(message);
+	free(opt);
+	free(message_id);
+	if (opt->flags & e_leaks)
+		system("leaks aivdm");
 	return (0);
-
 }
