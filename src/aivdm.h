@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 16:13:47 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:56:41 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,9 @@ typedef struct		s_opt
 
 typedef enum		e_message_type
 {
-	e_1_position_report = 1
+	e_1_position_report = 1,
+	e_2_position_report = 2,
+	e_3_position_report = 3
 }					t_message_type;
 
 typedef enum		e_error_code

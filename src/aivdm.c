@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 16:06:38 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/10 16:56:41 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ int				main(int argc, char **argv)
 	char			*payload_string_tmp;
 	int				payload_string_length;
 	char			*padding;
-	double			sog;
+	double			speed_over_ground;
 
 	ft_step_args(&argc, &argv);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
@@ -247,7 +247,8 @@ int				main(int argc, char **argv)
 				if ((int)message_id->message_id > 0  &&
 														(int)message_id->message_id < 8)
 				{
-					if ((t_message_type)message_id->message_id == e_1_position_report)
+					if ((t_message_type)message_id->message_id >= e_1_position_report &&
+							(t_message_type)message_id->message_id <= e_3_position_report)
 					{
 						record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
 						ft_memcpy(record_123, ais_data, sizeof(*record_123));
@@ -255,15 +256,15 @@ int				main(int argc, char **argv)
 						mmsi += (size_t)record_123->mmsi2 << 14 ;
 						mmsi += (size_t)record_123->mmsi1 << 6;
 						mmsi += (size_t)record_123->mmsi0;
-						sog = (double)((size_t)record_123->speed_over_ground_1 << 4);
-						sog += (double)record_123->speed_over_ground_0;
-						sog /= 10;
-						ft_printf("SOG: %.1f\n", sog);
-						if (sog)
-							ft_printf("%s\n", line);
-						mmsi_mid = mmsi;
-						if (mmsi_mid < 1000)
+						speed_over_ground = (double)((size_t)record_123->speed_over_ground_1 << 4);
+						speed_over_ground += (double)record_123->speed_over_ground_0;
+						speed_over_ground /= 10;
+						if (speed_over_ground > 0)
+						{
+							ft_printf("SOG: %.1f\n", speed_over_ground);
 							print_payload(record_123, line, mmsi);
+						}
+						mmsi_mid = mmsi;
 						while (mmsi_mid >= 1000)
 							mmsi_mid /= 10;
 						count_mmsi_mid(message, mmsi_mid);
