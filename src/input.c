@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/09 16:24:03 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/10 14:22:07 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/12 14:17:09 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,34 @@ void			ft_read_opt(t_opt *opt, int *argc, char ***argv)
 		ft_step_args(argc, argv);
 	}
 	return ;
+}
+
+int				validate_input_record(char **aivdm_record_array, char *line,
+																size_t *ok_cnt)
+{
+	t_error_code	error;
+	size_t			number_of_fields;
+	char			validate_char;
+
+	error = 0;
+	number_of_fields = -1;
+	while (aivdm_record_array[++number_of_fields])
+		;
+	if (number_of_fields != NUM_OF_FIELDS)
+		error = e_invalid_num_of_fields;
+	else
+	{
+		validate_char = aivdm_record_array[number_of_fields - 1][1];
+		if (validate_char != '*')
+			error = e_invalid_check_sum;
+		else
+		{
+			(*ok_cnt)++;
+			if (!(*ok_cnt % PRINT_OK))
+				ft_printf("OK (%d)\n", *ok_cnt);
+		}
+	}
+	if (error && *line)
+		ft_printf("ERROR (%s)\n", line);
+	return (error);
 }

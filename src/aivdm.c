@@ -3,53 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 16:56:41 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/12 14:16:17 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
 
-static void		print_payload(t_record_123 *record_123, char *line, int mmsi)
+static void		print_payload(char *line, t_message *message)
 {
 	ft_printf("%s\n", line);
-	ft_printf("Size of record 123: %d\n", sizeof(*record_123));
-	print_bin((char *)record_123, sizeof(*record_123));
-	ft_printf("MMSI: %-9d,  Message: %x\n", mmsi, record_123->message_id);
+	ft_printf("MMSI: %-9d,  Message: %x\n", message->mmsi, message->message_id);
 	return ;
-}
-
-static int		validate_record(char **aivdm_record_array, char *line,
-																size_t *ok_cnt)
-{
-	t_error_code	error;
-	size_t			number_of_fields;
-	char			validate_char;
-
-	(void)line;
-	error = 0;
-	number_of_fields = -1;
-	while (aivdm_record_array[++number_of_fields])
-		;
-	if (number_of_fields != NUM_OF_FIELDS)
-		error = e_invalid_num_of_fields;
-	else
-	{
-		validate_char = aivdm_record_array[number_of_fields - 1][1];
-		if (validate_char != '*')
-			error = e_invalid_check_sum;
-		else
-		{
-			(*ok_cnt)++;
-			if (!(*ok_cnt % PRINT_OK))
-				ft_printf("OK (%d)\n", *ok_cnt);
-		}
-	}
-	if (error && *line)
-		ft_printf("ERROR (%s)\n", line);
-	return (error);
 }
 
 // static void		print_bits(size_t size, void *ptr)
@@ -112,7 +79,8 @@ static char		*ais_encoder(char *payload_string, int payload_string_length, char 
 	return (ais_data);
 }
 
-static void		count_messages(t_message *message, t_message_id *message_id)
+static void		count_messages(t_statistics *statistics,
+													t_message_id *message_id)
 {
 	static int	counter = 0;
 	int			message_type;
@@ -121,14 +89,14 @@ static void		count_messages(t_message *message, t_message_id *message_id)
 	int			max_id;
 
 	message_type = (int)message_id->message_id;
-	message->type_counter[message_type]++;
+	statistics->type_counter[message_type]++;
 	counter++;
 	if (!(counter % 20))
 	{
 		i = -1;
 		while (++i < MAX_NUM_OF_MESSAGE_TYPES)
 		{
-			if (message->type_counter[i])
+			if (statistics->type_counter[i])
 				ft_printf("%5d", i);
 		}
 		ft_printf("\n");
@@ -136,12 +104,12 @@ static void		count_messages(t_message *message, t_message_id *message_id)
 		i = -1;
 		while (++i < MAX_NUM_OF_MESSAGE_TYPES)
 		{
-			if (message->type_counter[i])
+			if (statistics->type_counter[i])
 			{
-				ft_printf("%5d", message->type_counter[i]);
-				if (max <= message->type_counter[i])
+				ft_printf("%5d", statistics->type_counter[i]);
+				if (max <= statistics->type_counter[i])
 				{
-					max = message->type_counter[i];
+					max = statistics->type_counter[i];
 					max_id = i;
 				}
 			}
@@ -152,26 +120,25 @@ static void		count_messages(t_message *message, t_message_id *message_id)
 	return ;
 }
 
-static void		count_mmsi_mid(t_message *message, int mmsi_mid)
+static void		count_mmsi_mid(t_statistics *statistics, int mmsi)
 {
-	static int	counter = 0;
-	int			i;
-	int			max;
-	int			max_id;
+	static int		counter = 0;
+	int				i;
+	int				max;
+	int				max_id;
+	int				mmsi_mid;
 
-	if (mmsi_mid < 100)
-	{
-		ft_printf("Too small\n");
-		return ;
-	}
-	message->mmsi_mid_counter[mmsi_mid]++;
+	mmsi_mid = mmsi;
+	while (mmsi_mid >= 1000)
+		mmsi_mid /= 10;
+	statistics->mmsi_mid_counter[mmsi_mid]++;
 	counter++;
 	if (!(counter % 20))
 	{
 		i = -1;
 		while (++i < COUNTRIES)
 		{
-			if (message->mmsi_mid_counter[i])
+			if (statistics->mmsi_mid_counter[i])
 				ft_printf("%5d", i);
 		}
 		ft_printf("\n");
@@ -179,12 +146,12 @@ static void		count_mmsi_mid(t_message *message, int mmsi_mid)
 		i = -1;
 		while (++i < COUNTRIES)
 		{
-			if (message->mmsi_mid_counter[i])
+			if (statistics->mmsi_mid_counter[i])
 			{
-				ft_printf("%5d", message->mmsi_mid_counter[i]);
-				if (max <= message->mmsi_mid_counter[i])
+				ft_printf("%5d", statistics->mmsi_mid_counter[i]);
+				if (max <= statistics->mmsi_mid_counter[i])
 				{
-					max = message->mmsi_mid_counter[i];
+					max = statistics->mmsi_mid_counter[i];
 					max_id = i;
 				}
 			}
@@ -201,17 +168,14 @@ int				main(int argc, char **argv)
 	char			**aivdm_record_array;
 	size_t			ok_cnt;
 	t_message_id	*message_id;
-	t_record_123	*record_123;
 	char			*ais_data;
-	int				mmsi;
-	int				mmsi_mid;
-	t_message		*message;
+	t_statistics	*statistics;
 	t_opt			*opt;
 	char			*payload_string;
 	char			*payload_string_tmp;
 	int				payload_string_length;
 	char			*padding;
-	double			speed_over_ground;
+	t_message		*message;
 
 	ft_step_args(&argc, &argv);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
@@ -219,12 +183,13 @@ int				main(int argc, char **argv)
 	line = NULL;
 	ok_cnt = 0;
 	message = (t_message *)ft_memalloc(sizeof(*message));
+	statistics = (t_statistics *)ft_memalloc(sizeof(*statistics));
 	message_id = (t_message_id *)ft_memalloc(sizeof(*message_id));
 	while (ft_get_next_line(opt->fd, &line))
 	{
 //		ft_printf("%s\n", line);
 		aivdm_record_array = (char **)ft_strsplit(line, ',');
-		if (!validate_record(aivdm_record_array, line, &ok_cnt))
+		if (!validate_input_record(aivdm_record_array, line, &ok_cnt))
 		{
 			if (*aivdm_record_array[2] == '1')
 			{
@@ -243,32 +208,20 @@ int				main(int argc, char **argv)
 				padding = aivdm_record_array[6];
 				ais_data = ais_encoder(payload_string, payload_string_length, padding);
 				ft_memcpy(message_id, ais_data, sizeof(*message_id));
-				count_messages(message, message_id);
+				count_messages(statistics, message_id);
 				if ((int)message_id->message_id > 0  &&
 														(int)message_id->message_id < 8)
 				{
 					if ((t_message_type)message_id->message_id >= e_1_position_report &&
 							(t_message_type)message_id->message_id <= e_3_position_report)
 					{
-						record_123 = (t_record_123 *)ft_memalloc(sizeof(*record_123));
-						ft_memcpy(record_123, ais_data, sizeof(*record_123));
-						mmsi = (size_t)record_123->mmsi3 << 22;
-						mmsi += (size_t)record_123->mmsi2 << 14 ;
-						mmsi += (size_t)record_123->mmsi1 << 6;
-						mmsi += (size_t)record_123->mmsi0;
-						speed_over_ground = (double)((size_t)record_123->speed_over_ground_1 << 4);
-						speed_over_ground += (double)record_123->speed_over_ground_0;
-						speed_over_ground /= 10;
-						if (speed_over_ground > 0)
+						parse_message_123(ais_data, message);
+						if (message->speed_over_ground > 0)
 						{
-							ft_printf("SOG: %.1f\n", speed_over_ground);
-							print_payload(record_123, line, mmsi);
+							ft_printf("SOG: %.1f\n", message->speed_over_ground);
+							print_payload(line, message);
 						}
-						mmsi_mid = mmsi;
-						while (mmsi_mid >= 1000)
-							mmsi_mid /= 10;
-						count_mmsi_mid(message, mmsi_mid);
-						free(record_123);
+						count_mmsi_mid(statistics, message->mmsi);
 					}
 				}
 				ft_strdel(&payload_string);
@@ -280,7 +233,7 @@ int				main(int argc, char **argv)
 	}
 	ft_strdel(&payload_string);
 	ft_strdel(&line);
-	free(message);
+	free(statistics);
 	free(opt);
 	free(message_id);
 	if (opt->flags & e_leaks)
