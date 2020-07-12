@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/10 16:56:41 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/12 14:15:27 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 typedef enum		e_flags
 {
-	e_file =  0b0001,
+	e_file = 0b0001,
 	e_leaks = 0b0010
 }					t_flags;
 
@@ -58,48 +58,26 @@ typedef struct		s_message_id
 						message_id	:	6;
 }					t_message_id;
 
-typedef struct		s_message
+typedef struct		s_statistics
 {
 	int				type_counter[MAX_NUM_OF_MESSAGE_TYPES];
 	int				mmsi_mid_counter[COUNTRIES];
-}					t_message;
+}					t_statistics;
 
-typedef struct		s_record_123
+typedef struct		s_message
 {
-	unsigned char		dummy_1					:	2,
-						message_id				:	6;
-	unsigned char		mmsi3;
-	unsigned char		mmsi2;
-	unsigned char		mmsi1;
-	unsigned char		navigational_status_1	:	2,
-						mmsi0					: 	6;
-	unsigned char		rate_of_turn_1			:	6,
-						navigational_status_0	:	2;
-	unsigned char		speed_over_ground_1		:	6,
-						rate_of_turn_0			:	2;
-	unsigned char		longitude_4				:	3,
-						position_accuracy		:	1,
-						speed_over_ground_0		:	4;
-	unsigned char		longitude_3				:	8;
-	unsigned char		longitude_2				:	8;
-	unsigned char		longitude_1				:	8;
-	unsigned char		latitude_3				:	7,
-						longitude_0				:	1;
-	unsigned char		latitude_2				:	8;
-	unsigned char		latitude_1				:	8;
-	unsigned char		course_over_ground_2	:	3,
-						latitude_0				:	5;
-	unsigned char		course_over_ground_1	:	8;
-	unsigned char		true_heading_1			:	7,
-						course_over_ground_0	:	1;
-	unsigned char		dummy_2					:	6,
-						true_heading_0			:	2;
-}					t_record_123;
+	int			message_id;
+	double		speed_over_ground;
+	int			mmsi;
+}					t_message;
 
 void				ft_step_args(int *argc, char ***argv);
 void				ft_read_opt(t_opt *opt, int *argc, char ***argv);
+int					validate_input_record(char **aivdm_record_array, char *line,
+																size_t *ok_cnt);
 void				print_hex(char *file_content, ssize_t size);
 void				print_bin(char *file_content, ssize_t size);
 void				release_string_array(char **str_array);
+void				parse_message_123(char *ais_data, t_message *message);
 
 #endif
