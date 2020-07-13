@@ -33,8 +33,16 @@ def home(request: Request):
         "mmsi": "230xxxxxx"
     })
 
-@app.post("/stock")
-def create_country(country_request: CountryRequest, db: Session = Depends(get_db)):
+def fetch_country_data(mmsi_mid: int):
+    db = SessionLocal()
+    country = db.query(Country).filter(Country.mmsi_mid == mmsi_mid).first()
+
+    country.country = "Finland"
+    db.add(country)
+    db.commit()
+
+@app.post("/country")
+async def create_country(country_request: CountryRequest, backround_task: BackgroundTasks, db: Session = Depends(get_db)):
     """
     Updateas a vellel related information in The Aura river at Turku.
     """
@@ -44,6 +52,8 @@ def create_country(country_request: CountryRequest, db: Session = Depends(get_db
 
     db.add(country)
     db.commit()
+
+    backround_task.add_task(fetch_country_data, country.mmsi_mid)
 
     return {
         "code": "success",
