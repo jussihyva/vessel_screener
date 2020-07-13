@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/12 14:16:17 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/13 16:32:00 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,8 @@ static void		count_mmsi_mid(t_statistics *statistics, int mmsi)
 	mmsi_mid = mmsi;
 	while (mmsi_mid >= 1000)
 		mmsi_mid /= 10;
+	if (mmsi_mid != 230)
+		ft_printf("%d\n", mmsi);
 	statistics->mmsi_mid_counter[mmsi_mid]++;
 	counter++;
 	if (!(counter % 20))
