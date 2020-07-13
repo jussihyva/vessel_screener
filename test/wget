@@ -1,0 +1,1 @@
+wget -qO- --post-dat='{"SS": "RR"}' --header='Content-Type:application/json' localhost:8000/stock
