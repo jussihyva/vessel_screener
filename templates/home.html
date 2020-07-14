@@ -1,6 +1,31 @@
 {%extends "layout.html" %}
 
 {% block content %}
+<script>
+	$(document).ready(function()
+	{
+		$("#add_mmsi_mid").click(function()
+		{
+			$('.ui.modal').modal('show');
+		});
+		$("#save").click(function(){
+			var mmsi_mid = $("#mmsi_mid").val();
+			var mmsi_mid_list = mmsi_mid.split("\n");
+			for (var i = 0; i < mmsi_mid_list.length;  ++i)
+			{
+				$.ajax(
+				{
+					url: "/country",
+					type: "POST",
+					contentType: "application/json",
+					data:  JSON.stringify({"symbol": mmsi_mid_list[i]}),
+					dataType: "json"
+				})
+			}
+			$('.ui.modal').modal('hide');
+		});
+	});
+</script>
 <div class="ui form">
 	<div class="grouped fields">
 		<label>Select time period:</label>
@@ -30,31 +55,52 @@
 		</div>
 	</div>
 </div>
+
+<div>
+	<button id="add_mmsi_mid" class="ui button">
+		Add MMSI_MID codes
+	</button>
+</div>
+
 <table class="ui celled table">
 	<thead>
-	  <tr><th>Country code</th>
+	  <tr><th>MMSI MID code</th>
 	  <th>Country</th>
-	  <th>----</th>
+	  <th>Comments</th>
 	</tr></thead>
 	<tbody>
-	  <tr>
-		<td data-label="Name">--</td>
-		<td data-label="Age">--</td>
-		<td data-label="Job">--</td>
-	  </tr>
-	  <tr>
-		<td data-label="Name">--</td>
-		<td data-label="Age">--</td>
-		<td data-label="Job">--</td>
-	  </tr>
-	  <tr>
-		<td data-label="Name">--</td>
-		<td data-label="Age">--</td>
-		<td data-label="Job">--</td>
-	  </tr>
+		{% for c in country %}
+		<tr>
+			<td>{{ c.mmsi_mid }}</td>
+			<td>{{ c.country }}</td>
+			<td>{{ c.comment }}</td>
+		</tr>
+		{% endfor %}
+
 	</tbody>
-  </table>
-{% endblock %}
+</table>
+<div class="ui modal">
+	<i class="close icon"></i>
+	<div class="header">
+		Country code (MMSI_MID)
+	</div>
+	<div class="content">
+		<div class="ui form">
+			<div class="field">
+			  <label>Enter MMSI_MID code</label>
+			  <textarea id="mmsi_mid"></textarea>
+			</div>
+		  </div>
+	</div>
+	<div class="actions">
+	<div id="save" class="ui positive right labeled icon button">
+		Insert MSSI_MID code
+		<i class="plus icon"></i>
+	</div>
+	</div>
+</div>
+
+  {% endblock %}
 
 
 

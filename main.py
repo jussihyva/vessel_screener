@@ -1,4 +1,6 @@
 import models
+import yfinance
+from country import country_name
 from fastapi import FastAPI, Request, Depends, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from database import SessionLocal, engine
@@ -23,21 +25,23 @@ def get_db():
         db.close()
 
 @app.get("/")
-def home(request: Request):
+def home(request: Request, db: Session = Depends(get_db)):
     """
     Displays country code of vessels in The Aura river at Turku.
     """
+
+    country = db.query(Country).all()
     return templates.TemplateResponse("home.html",
     {
         "request": request,
-        "mmsi": "230xxxxxx"
+        "country": country
     })
 
 def fetch_country_data(mmsi_mid: int):
     db = SessionLocal()
     country = db.query(Country).filter(Country.mmsi_mid == mmsi_mid).first()
 
-    country.country = "Finland"
+    country.country = country_name[mmsi_mid]
     db.add(country)
     db.commit()
 
@@ -47,15 +51,19 @@ async def create_country(country_request: CountryRequest, backround_task: Backgr
     Updateas a vellel related information in The Aura river at Turku.
     """
 
-    country = Country()
-    country.mmsi_mid = country_request.symbol
-
-    db.add(country)
-    db.commit()
-
-    backround_task.add_task(fetch_country_data, country.mmsi_mid)
+    country = db.query(Country).filter(Country.mmsi_mid == country_request.symbol).first()
+    if (country == None):
+        country = Country()
+        country.mmsi_mid = country_request.symbol
+        country.comment = "Only for test. This is NOT correct information."
+        db.add(country)
+        db.commit()
+        backround_task.add_task(fetch_country_data, country.mmsi_mid)
+    else:
+        db.delete(country)
+        db.commit()
 
     return {
         "code": "success",
-        "message": "stock created"
+        "message": "country created"
     }
