@@ -3,3 +3,4 @@ aivdm.log
 *.a
 aivdm
 *.pyc
+__pycache__
