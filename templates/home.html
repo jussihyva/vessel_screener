@@ -6,7 +6,7 @@
 	{
 		$("#add_mmsi_mid").click(function()
 		{
-			$('.ui.modal').modal('show');
+			$('#ui.modal').modal('show');
 		});
 		$("#save").click(function(){
 			var mmsi_mid = $("#mmsi_mid").val();
@@ -22,7 +22,7 @@
 					dataType: "json"
 				})
 			}
-			$('.ui.modal').modal('hide');
+			$('#ui.modal').modal('hide');
 		});
 	});
 </script>
@@ -79,7 +79,7 @@
 
 	</tbody>
 </table>
-<div class="ui modal">
+<div class="ui modal" id="ui_modal">
 	<i class="close icon"></i>
 	<div class="header">
 		Country code (MMSI_MID)
