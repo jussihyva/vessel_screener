@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/12 14:15:27 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/15 11:49:34 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "ft_printf.h"
 # include "errno.h"
 # include <fcntl.h>
+#include <sqlite3.h>
 
 # define PRINT_OK 500
 # define NUM_OF_FIELDS 7
@@ -79,5 +80,8 @@ void				print_hex(char *file_content, ssize_t size);
 void				print_bin(char *file_content, ssize_t size);
 void				release_string_array(char **str_array);
 void				parse_message_123(char *ais_data, t_message *message);
+void				open_sqlite3(sqlite3 **db);
+void				close_sqlite3(sqlite3 *db);
+void				select_sqlite3(sqlite3 *db);
 
 #endif
