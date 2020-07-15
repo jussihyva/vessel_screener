@@ -1,1 +1,5 @@
-wget -qO- --post-dat='{"symbol": 230}' --header='Content-Type:application/json' localhost:8000/country
+#!/bin/bash
+timestamp=`date +%s`
+wget -qO- --post-data='{"symbol": 237, "timestamp": 1594787784}' --header='Content-Type:application/json' localhost:8000/country
+echo
+echo "$timestamp"
