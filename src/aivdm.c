@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/13 16:32:00 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/15 11:50:20 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,14 @@ int				main(int argc, char **argv)
 	int				payload_string_length;
 	char			*padding;
 	t_message		*message;
+	sqlite3			*db;
 
 	ft_step_args(&argc, &argv);
+	open_sqlite3(&db);
+	ft_printf("%p\n", db);
+	select_sqlite3(db);
+	ft_printf("%p\n", db);
+	close_sqlite3(db);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
 	ft_read_opt(opt, &argc, &argv);
 	line = NULL;

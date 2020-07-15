@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+         #
+#    By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/05 11:36:37 by ubuntu            #+#    #+#              #
-#    Updated: 2020/07/12 14:09:01 by ubuntu           ###   ########.fr        #
+#    Updated: 2020/07/15 10:58:05 by jkauppi          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,9 @@ CC			=	gcc
 C_FLAGS		=	-g -Wall -Werror -Wextra
 LIB_FOLDER	=	lib
 INCLUDES	=	-I $(LIB_FOLDER)
-LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf
+LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf -l sqlite3
 
-SRC			=	print_hex.c input.c memory.c message_123.c
+SRC			=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c
 
 HEADERS		=	*.h
 
