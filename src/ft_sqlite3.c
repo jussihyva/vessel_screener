@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 10:34:34 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/15 12:02:53 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/15 18:01:53 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,42 +28,47 @@ void			open_sqlite3(sqlite3 **db)
 
 int		print_select_result(void *data, int argc, char **argv, char **column_name)
 {
-//	int			i;
+	int			i;
 
-	(void)data;
 	(void)argc;
 	(void)argv;
 	(void)column_name;
 	ft_printf("Data\n");
-//	ft_printf("Data: %s\n", data);
-	// i = -1;
-	// while (++i < argc)
-	// {
-	// 	ft_printf("%s\n", column_name[i]);
-	// }
-	// while (++i < argc)
-	// {
-	// 	ft_printf("%s\n", argv[i]);
-	// }
+	*(int *)data = 1;
+	ft_printf("Data: %d\n", *(int *)data);
+	i = -1;
+	while (++i < argc)
+	{
+		ft_printf("%-20s", column_name[i]);
+	}
+	ft_printf("\n");
+	i = -1;
+	while (++i < argc)
+	{
+		ft_printf("%-20s", argv[i]);
+	}
+	ft_printf("\n");
 	return (0);
 }
 void			select_sqlite3(sqlite3 *db)
 {
 	char		*sql_query_string;
 	int			error_code;
-	char		*data;
+	int			data;
 	char		*error_message;
 
-	sql_query_string = ft_strdup("select mmsi_mid from country");
-	data = ft_strdup("MOI\n");
+	sql_query_string = ft_strdup("select * from country where mmsi_mid = 230");
 	error_message = NULL;
-	if ((error_code = sqlite3_exec(db, sql_query_string, (void *)data, print_select_result, &error_message)))
+	data = 0;
+	if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, (void *)&data, &error_message)))
 	{
 		;
 	}
-	ft_printf("Error message: %s\n", error_message);
+	if (data)
+		ft_printf("Updated: %d\n", 230);
+	else
+		ft_printf("Created: %d\n", 230);
 	ft_strdel(&sql_query_string);
-//	ft_strdel(&data);
 	return ;
 }
 
