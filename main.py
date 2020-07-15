@@ -31,17 +31,22 @@ def home(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    country = db.query(Country).all()
+    country_list = db.query(Country).all()
+    for country in country_list:
+        if country.country == "-":
+            country.country = country_name[country.mmsi_mid]
+            db.add(country)
+            db.commit()
+    
     return templates.TemplateResponse("home.html",
     {
         "request": request,
-        "country": country
+        "country": country_list
     })
 
 def fetch_country_data(mmsi_mid: int):
     db = SessionLocal()
     country = db.query(Country).filter(Country.mmsi_mid == mmsi_mid).first()
-
     country.country = country_name[mmsi_mid]
     db.add(country)
     db.commit()

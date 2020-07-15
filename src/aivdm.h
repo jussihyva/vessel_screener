@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/15 11:49:34 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:13:46 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ void				release_string_array(char **str_array);
 void				parse_message_123(char *ais_data, t_message *message);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
-void				select_sqlite3(sqlite3 *db);
+void				select_sqlite3(sqlite3 *db, int mmsi_mid);
 
 #endif
