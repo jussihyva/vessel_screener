@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    models.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+         #
+#    By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/07/13 17:49:07 by jkauppi           #+#    #+#              #
-#    Updated: 2020/07/14 12:01:51 by jkauppi          ###   ########.fr        #
+#    Updated: 2020/07/15 07:43:39 by ubuntu           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,4 +19,5 @@ class Country(Base):
 	id = Column(Integer, primary_key=True, index=True)
 	mmsi_mid = Column(Integer, unique=True, index=True)
 	country = Column(String)
+	timestamp = Column(Integer)
 	comment = Column(String)
