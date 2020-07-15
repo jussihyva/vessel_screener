@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/15 11:50:20 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:19:59 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ static void		count_messages(t_statistics *statistics,
 	return ;
 }
 
-static void		count_mmsi_mid(t_statistics *statistics, int mmsi)
+static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db)
 {
 	static int		counter = 0;
 	int				i;
@@ -133,6 +133,7 @@ static void		count_mmsi_mid(t_statistics *statistics, int mmsi)
 		mmsi_mid /= 10;
 	if (mmsi_mid != 230)
 		ft_printf("%d\n", mmsi);
+	select_sqlite3(db, mmsi_mid);
 	statistics->mmsi_mid_counter[mmsi_mid]++;
 	counter++;
 	if (!(counter % 20))
@@ -182,10 +183,6 @@ int				main(int argc, char **argv)
 
 	ft_step_args(&argc, &argv);
 	open_sqlite3(&db);
-	ft_printf("%p\n", db);
-	select_sqlite3(db);
-	ft_printf("%p\n", db);
-	close_sqlite3(db);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
 	ft_read_opt(opt, &argc, &argv);
 	line = NULL;
@@ -229,7 +226,7 @@ int				main(int argc, char **argv)
 							ft_printf("SOG: %.1f\n", message->speed_over_ground);
 							print_payload(line, message);
 						}
-						count_mmsi_mid(statistics, message->mmsi);
+						count_mmsi_mid(statistics, message->mmsi, db);
 					}
 				}
 				ft_strdel(&payload_string);
@@ -239,6 +236,7 @@ int				main(int argc, char **argv)
 		ft_strdel(&line);
 		release_string_array(aivdm_record_array);
 	}
+	close_sqlite3(db);
 	ft_strdel(&payload_string);
 	ft_strdel(&line);
 	free(statistics);

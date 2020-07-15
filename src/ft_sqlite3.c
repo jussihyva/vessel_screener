@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 10:34:34 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/15 18:01:53 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/15 20:22:41 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,25 +50,36 @@ int		print_select_result(void *data, int argc, char **argv, char **column_name)
 	ft_printf("\n");
 	return (0);
 }
-void			select_sqlite3(sqlite3 *db)
+void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 {
 	char		*sql_query_string;
+	char		*tmp;
 	int			error_code;
 	int			data;
 	char		*error_message;
 
-	sql_query_string = ft_strdup("select * from country where mmsi_mid = 230");
+	sql_query_string = ft_strjoin("select * from country where mmsi_mid = ", ft_itoa(mmsi_mid));
 	error_message = NULL;
 	data = 0;
 	if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, (void *)&data, &error_message)))
 	{
 		;
 	}
+	ft_strdel(&sql_query_string);
 	if (data)
 		ft_printf("Updated: %d\n", 230);
 	else
-		ft_printf("Created: %d\n", 230);
-	ft_strdel(&sql_query_string);
+	{
+		tmp = ft_strjoin("insert into country (mmsi_mid,country,timestamp,comment) values (", ft_itoa(mmsi_mid));
+		sql_query_string = ft_strjoin(tmp, ", '-', 3333333, 'Only for test. This is NOT correct information.')");
+		ft_strdel(&tmp);
+		ft_printf("Created: %d\n", mmsi_mid);
+		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, NULL, &error_message)))
+		{
+			;
+		}
+		ft_strdel(&sql_query_string);
+	}
 	return ;
 }
 
