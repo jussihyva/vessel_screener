@@ -16,6 +16,7 @@ templates = Jinja2Templates(directory="templates")
 
 class CountryRequest(BaseModel):
     symbol: str
+    timestamp: int
 
 def get_db():
     try:
@@ -50,11 +51,11 @@ async def create_country(country_request: CountryRequest, backround_task: Backgr
     """
     Updateas a vellel related information in The Aura river at Turku.
     """
-
     country = db.query(Country).filter(Country.mmsi_mid == country_request.symbol).first()
     if (country == None):
         country = Country()
         country.mmsi_mid = country_request.symbol
+        country.timestamp = country_request.timestamp
         country.comment = "Only for test. This is NOT correct information."
         db.add(country)
         db.commit()

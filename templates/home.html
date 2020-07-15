@@ -4,13 +4,11 @@
 <script>
 	$(document).ready(function()
 	{
-		$("#add_mmsi_mid").click(function()
-		{
-			$('#ui.modal').modal('show');
-		});
+		setInterval(function() {update_page();}, 10000);
+		$("#add_mmsi_mid").click(function() {$('#ui_modal').modal('show');});
 		$("#save").click(function(){
-			var mmsi_mid = $("#mmsi_mid").val();
-			var mmsi_mid_list = mmsi_mid.split("\n");
+			let mmsi_mid = $("#mmsi_mid").val();
+			let mmsi_mid_list = mmsi_mid.split("\n");
 			for (var i = 0; i < mmsi_mid_list.length;  ++i)
 			{
 				$.ajax(
@@ -22,9 +20,21 @@
 					dataType: "json"
 				})
 			}
-			$('#ui.modal').modal('hide');
+			$('#ui_modal').modal('dispose');
 		});
 	});
+	function update_page()
+	{
+		$.ajax(
+			{
+				url: "/",
+				type: "GET",
+				success: function(data, status)
+				{
+					document.getElementById("html").innerHTML = data
+				}
+			})
+	}
 </script>
 <div class="ui form">
 	<div class="grouped fields">
@@ -92,11 +102,9 @@
 			</div>
 		  </div>
 	</div>
-	<div class="actions">
-	<div id="save" class="ui positive right labeled icon button">
+	<button id="save" class="ui positive right labeled icon button" data-dismiss="modal">
 		Insert MSSI_MID code
 		<i class="plus icon"></i>
-	</div>
-	</div>
+	</button>
 </div>
   {% endblock %}
