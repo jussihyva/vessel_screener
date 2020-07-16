@@ -1,0 +1,18 @@
+<table class="ui celled table">
+	<thead>
+	  <tr>
+		  <th>MMSI MID code</th>
+		  <th>Country</th>
+		  <th>Comments</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for c in country %}
+		<tr>
+			<td>{{ c.mmsi_mid }}</td>
+			<td>{{ c.country }}</td>
+			<td>{{ c.comment }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
