@@ -6,11 +6,12 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 10:34:34 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/15 20:22:41 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/16 15:24:15 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
+#include <sys/time.h>
 
 void			open_sqlite3(sqlite3 **db)
 {
@@ -30,9 +31,6 @@ int		print_select_result(void *data, int argc, char **argv, char **column_name)
 {
 	int			i;
 
-	(void)argc;
-	(void)argv;
-	(void)column_name;
 	ft_printf("Data\n");
 	*(int *)data = 1;
 	ft_printf("Data: %d\n", *(int *)data);
@@ -52,11 +50,13 @@ int		print_select_result(void *data, int argc, char **argv, char **column_name)
 }
 void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 {
-	char		*sql_query_string;
-	char		*tmp;
-	int			error_code;
-	int			data;
-	char		*error_message;
+	char			*sql_query_string;
+	char			*tmp1;
+	char			*tmp2;
+	int				error_code;
+	int				data;
+	char			*error_message;
+	struct timeval	tv;
 
 	sql_query_string = ft_strjoin("select * from country where mmsi_mid = ", ft_itoa(mmsi_mid));
 	error_message = NULL;
@@ -67,12 +67,25 @@ void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 	}
 	ft_strdel(&sql_query_string);
 	if (data)
+	{
+		gettimeofday(&tv, NULL);
+		tmp1 = ft_strjoin("update country set timestamp = ", ft_itoa(tv.tv_sec));
+		tmp2 = ft_strjoin(" where mmsi_mid=", ft_itoa(mmsi_mid));
+		sql_query_string = ft_strjoin(tmp1, tmp2);
+		ft_strdel(&tmp1);
+		ft_strdel(&tmp2);
 		ft_printf("Updated: %d\n", 230);
+		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, (void *)&data, &error_message)))
+		{
+			;
+		}
+		ft_strdel(&sql_query_string);
+	}
 	else
 	{
-		tmp = ft_strjoin("insert into country (mmsi_mid,country,timestamp,comment) values (", ft_itoa(mmsi_mid));
-		sql_query_string = ft_strjoin(tmp, ", '-', 3333333, 'Only for test. This is NOT correct information.')");
-		ft_strdel(&tmp);
+		tmp1 = ft_strjoin("insert into country (mmsi_mid,country,timestamp,comment) values (", ft_itoa(mmsi_mid));
+		sql_query_string = ft_strjoin(tmp1, ", '-', 3333333, 'Only for test. This is NOT correct information.')");
+		ft_strdel(&tmp1);
 		ft_printf("Created: %d\n", mmsi_mid);
 		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, NULL, &error_message)))
 		{
