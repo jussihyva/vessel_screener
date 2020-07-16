@@ -2,6 +2,7 @@
 
 {% block content %}
 <script>
+	let filterTime = 900
 	$(document).ready(function()
 	{
 		setInterval(function() {update_page();}, 10000);
@@ -23,13 +24,17 @@
 			$('#ui_modal').modal('dispose');
 		});
 	});
+	function filterPeriod()
+	{
+		filterTime = document.getElementById("time_period").value;
+	}
 	function update_page()
 	{
 		$.ajax(
 			{
 				url: "/table",
 				type: "GET",
-				data:  {"timestamp": Date.now()},
+				data:  {"timestamp": parseInt((Date.now() / 1000) - filterTime, 10)},
 				success: function(data, status)
 				{
 					document.getElementById("country_table").innerHTML = data
@@ -38,33 +43,13 @@
 	}
 </script>
 <div class="ui form">
-	<div class="grouped fields">
-		<label>Select time period:</label>
-	  	<div class="field">
-			<div class="ui radio checkbox">
-		 		 <input type="radio" name="example2" checked="checked">
-		 		 <label>Last 15 min</label>
-			</div>
-		</div>
-	  	<div class="field">
-			<div class="ui radio checkbox">
-				<input type="radio" name="example2">
-				<label>Last hour</label>
-			</div>
-		</div>
-		<div class="field">
-			<div class="ui radio checkbox">
-				<input type="radio" name="example2">
-				<label>Last day</label>
-			</div>
-		</div>
-		<div class="field">
-			<div class="ui radio checkbox">
-				<input type="radio" name="example2">
-				<label>Last week</label>
-			</div>
-		</div>
-	</div>
+	<label>Select time period:</label>
+	<select id="time_period" size="1" onchange="filterPeriod()">
+		<option value="900">Last 15 min</option>
+		<option value="3600">Last hour</option>
+		<option value="86400">Last day</option>
+		<option value="604800">Last week</option>
+	  </select>
 </div>
 <div id="country_table">
 	{% include "table.html" %}

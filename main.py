@@ -53,9 +53,8 @@ def home(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    timestamp = int(int(request.query_params["timestamp"]) / 1000)
-    country_list = db.query(Country).filter(Country.timestamp > (int(timestamp) - 3))
-#    country_list = db.query(Country).all()
+    timestamp = int(request.query_params["timestamp"])
+    country_list = db.query(Country).filter(Country.timestamp > int(timestamp))
     for country in country_list:
         print(timestamp)
         print(country.timestamp)
