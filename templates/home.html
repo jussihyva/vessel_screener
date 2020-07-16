@@ -27,11 +27,12 @@
 	{
 		$.ajax(
 			{
-				url: "/",
+				url: "/table",
 				type: "GET",
+				data:  {"timestamp": Date.now()},
 				success: function(data, status)
 				{
-					document.getElementById("html").innerHTML = data
+					document.getElementById("country_table").innerHTML = data
 				}
 			})
 	}
@@ -65,39 +66,7 @@
 		</div>
 	</div>
 </div>
-<table class="ui celled table">
-	<thead>
-	  <tr><th>MMSI MID code</th>
-	  <th>Country</th>
-	  <th>Comments</th>
-	</tr></thead>
-	<tbody>
-		{% for c in country %}
-		<tr>
-			<td>{{ c.mmsi_mid }}</td>
-			<td>{{ c.country }}</td>
-			<td>{{ c.comment }}</td>
-		</tr>
-		{% endfor %}
-
-	</tbody>
-</table>
-<div class="ui modal" id="ui_modal">
-	<i class="close icon"></i>
-	<div class="header">
-		Country code (MMSI_MID)
-	</div>
-	<div class="content">
-		<div class="ui form">
-			<div class="field">
-			  <label>Enter MMSI_MID code</label>
-			  <textarea id="mmsi_mid"></textarea>
-			</div>
-		  </div>
-	</div>
-	<button id="save" class="ui positive right labeled icon button" data-dismiss="modal">
-		Insert MSSI_MID code
-		<i class="plus icon"></i>
-	</button>
+<div id="country_table">
+	{% include "table.html" %}
 </div>
-  {% endblock %}
+{% endblock %}
