@@ -18,6 +18,9 @@ class CountryRequest(BaseModel):
     symbol: str
     timestamp: int
 
+class TableRequest(BaseModel):
+    timestamp: int
+
 def get_db():
     try:
         db = SessionLocal()
@@ -39,6 +42,29 @@ def home(request: Request, db: Session = Depends(get_db)):
             db.commit()
     
     return templates.TemplateResponse("home.html",
+    {
+        "request": request,
+        "country": country_list
+    })
+
+@app.get("/table")
+def home(request: Request, db: Session = Depends(get_db)):
+    """
+    Displays country code of vessels in The Aura river at Turku.
+    """
+
+    timestamp = int(int(request.query_params["timestamp"]) / 1000)
+    country_list = db.query(Country).filter(Country.timestamp > (int(timestamp) - 3))
+#    country_list = db.query(Country).all()
+    for country in country_list:
+        print(timestamp)
+        print(country.timestamp)
+        if country.country == "-":
+            country.country = country_name[country.mmsi_mid]
+            db.add(country)
+            db.commit()
+    
+    return templates.TemplateResponse("table.html",
     {
         "request": request,
         "country": country_list
@@ -66,7 +92,9 @@ async def create_country(country_request: CountryRequest, backround_task: Backgr
         db.commit()
         backround_task.add_task(fetch_country_data, country.mmsi_mid)
     else:
-        db.delete(country)
+        print(country_request.timestamp)
+        country.timestamp = country_request.timestamp
+        db.add(country)
         db.commit()
 
     return {
