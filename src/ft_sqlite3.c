@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 10:34:34 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/16 15:24:15 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/16 18:11:51 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 	char			*sql_query_string;
 	char			*tmp1;
 	char			*tmp2;
+	char			*tmp3;
 	int				error_code;
 	int				data;
 	char			*error_message;
@@ -74,18 +75,28 @@ void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 		sql_query_string = ft_strjoin(tmp1, tmp2);
 		ft_strdel(&tmp1);
 		ft_strdel(&tmp2);
-		ft_printf("Updated: %d\n", 230);
 		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, (void *)&data, &error_message)))
 		{
 			;
 		}
 		ft_strdel(&sql_query_string);
+		sql_query_string = ft_strjoin("update country set comment = '' where mmsi_mid=", ft_itoa(mmsi_mid));
+		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, (void *)&data, &error_message)))
+		{
+			;
+		}
+		ft_strdel(&sql_query_string);
+		ft_printf("Updated: %d\n", mmsi_mid);
 	}
 	else
 	{
 		tmp1 = ft_strjoin("insert into country (mmsi_mid,country,timestamp,comment) values (", ft_itoa(mmsi_mid));
-		sql_query_string = ft_strjoin(tmp1, ", '-', 3333333, 'Only for test. This is NOT correct information.')");
+		tmp2 = ft_strjoin(", '-', ", ft_itoa(tv.tv_sec));
+		tmp3 = ft_strjoin(tmp1, tmp2);
 		ft_strdel(&tmp1);
+		ft_strdel(&tmp2);
+		sql_query_string = ft_strjoin(tmp3, ", '')");
+		ft_strdel(&tmp3);
 		ft_printf("Created: %d\n", mmsi_mid);
 		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, NULL, &error_message)))
 		{
