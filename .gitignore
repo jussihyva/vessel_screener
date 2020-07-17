@@ -4,3 +4,4 @@ aivdm.log
 aivdm
 *.pyc
 __pycache__
+country.db
