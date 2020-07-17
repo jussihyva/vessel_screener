@@ -67,9 +67,9 @@ void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 		;
 	}
 	ft_strdel(&sql_query_string);
+	gettimeofday(&tv, NULL);
 	if (data)
 	{
-		gettimeofday(&tv, NULL);
 		tmp1 = ft_strjoin("update country set timestamp = ", ft_itoa(tv.tv_sec));
 		tmp2 = ft_strjoin(" where mmsi_mid=", ft_itoa(mmsi_mid));
 		sql_query_string = ft_strjoin(tmp1, tmp2);
