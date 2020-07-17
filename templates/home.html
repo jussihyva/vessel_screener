@@ -5,7 +5,7 @@
 	let filterTime = 900
 	$(document).ready(function()
 	{
-		setInterval(function() {update_page();}, 10000);
+		setInterval(function() {update_page();}, 3000);
 		$("#add_mmsi_mid").click(function() {$('#ui_modal').modal('show');});
 		$("#save").click(function(){
 			let mmsi_mid = $("#mmsi_mid").val();
