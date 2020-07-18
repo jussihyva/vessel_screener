@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+         #
+#    By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/05 11:36:37 by ubuntu            #+#    #+#              #
-#    Updated: 2020/07/15 10:58:05 by jkauppi          ###   ########.fr        #
+#    Updated: 2020/07/18 11:51:52 by ubuntu           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ LIB_FOLDER	=	lib
 INCLUDES	=	-I $(LIB_FOLDER)
 LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf -l sqlite3
 
-SRC			=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c
+SRC			=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c \
+				payload_parser.c
 
 HEADERS		=	*.h
 
