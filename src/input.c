@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/09 16:24:03 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/12 14:17:09 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/18 11:44:44 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ int				validate_input_record(char **aivdm_record_array, char *line,
 	number_of_fields = -1;
 	while (aivdm_record_array[++number_of_fields])
 		;
-	if (number_of_fields != NUM_OF_FIELDS)
+	if (number_of_fields && ft_strcmp(aivdm_record_array[0], "!AIVDM"))
+		error = e_unknown_message_type;
+	else if (number_of_fields != NUM_OF_FIELDS)
 		error = e_invalid_num_of_fields;
 	else
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/15 20:19:59 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/18 12:53:17 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ int				main(int argc, char **argv)
 	char			*padding;
 	t_message		*message;
 	sqlite3			*db;
+	int				payload_max_length;
 
 	ft_step_args(&argc, &argv);
 	open_sqlite3(&db);
@@ -190,11 +191,13 @@ int				main(int argc, char **argv)
 	message = (t_message *)ft_memalloc(sizeof(*message));
 	statistics = (t_statistics *)ft_memalloc(sizeof(*statistics));
 	message_id = (t_message_id *)ft_memalloc(sizeof(*message_id));
+	payload_string = NULL;
+	payload_max_length = 0;
 	while (ft_get_next_line(opt->fd, &line))
 	{
-//		ft_printf("%s\n", line);
-		aivdm_record_array = (char **)ft_strsplit(line, ',');
-		if (!validate_input_record(aivdm_record_array, line, &ok_cnt))
+		aivdm_record_array = parse_input_line(line);
+		if (aivdm_record_array && !validate_input_record(aivdm_record_array,
+																line, &ok_cnt))
 		{
 			if (*aivdm_record_array[2] == '1')
 			{
@@ -210,6 +213,11 @@ int				main(int argc, char **argv)
 			if (*aivdm_record_array[2] == *aivdm_record_array[1])
 			{
 				payload_string_length = ft_strlen(payload_string);
+				if (payload_string_length > payload_max_length)
+				{
+					ft_printf("Length of a payload string: %d\n", payload_string_length);
+					payload_max_length = payload_string_length;
+				}
 				padding = aivdm_record_array[6];
 				ais_data = ais_encoder(payload_string, payload_string_length, padding);
 				ft_memcpy(message_id, ais_data, sizeof(*message_id));
@@ -225,6 +233,7 @@ int				main(int argc, char **argv)
 						{
 							ft_printf("SOG: %.1f\n", message->speed_over_ground);
 							print_payload(line, message);
+							ft_dprintf(2, "Maximum length of a payload string: %d\n", payload_max_length);
 						}
 						count_mmsi_mid(statistics, message->mmsi, db);
 					}
