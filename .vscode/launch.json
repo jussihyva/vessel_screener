@@ -9,7 +9,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/aivdm",
-			"args": ["<", "test/aivdm.log"],
+			"args": ["<", "test/new_ais_data_format.log"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}",
 			"environment": [],
