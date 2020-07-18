@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/15 20:13:46 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/18 12:35:00 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef enum		e_message_type
 typedef enum		e_error_code
 {
 	e_invalid_num_of_fields = 1,
+	e_unknown_message_type,
 	e_invalid_check_sum
 }					t_error_code;
 
@@ -83,5 +84,6 @@ void				parse_message_123(char *ais_data, t_message *message);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
 void				select_sqlite3(sqlite3 *db, int mmsi_mid);
+char				**parse_input_line(char *line);
 
 #endif
