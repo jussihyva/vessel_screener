@@ -43,16 +43,44 @@
 			})
 	}
 </script>
-<div class="ui form">
-	<label>Select time period:</label>
-	<select id="time_period" size="1" onchange="filterPeriod()">
-		<option value="900">Last 15 min</option>
-		<option value="3600">Last hour</option>
-		<option value="86400">Last day</option>
-		<option value="604800">Last week</option>
-	  </select>
+<div class="ui pointing inverted orange menu">
+  <a class="active item">
+    Countries
+  </a>
+</div>
+<div style="border-style: hidden;" class="ui segments">
+	<div class="ui segment">
+			<label style="font-weight: bold;" >Select time period:</label>
+			<select id="time_period" size="1" onchange="filterPeriod()">
+				<option value="900">Last 15 min</option>
+				<option value="3600">Last hour</option>
+				<option value="86400">Last day</option>
+				<option value="604800">Last week</option>
+			</select>
+	</div>
 </div>
 <div id="country_table">
 	{% include "table.html" %}
+</div>
+<div class="ui segments">
+	<div class="ui horizontal segments">
+		<div style="text-align: center;" class="ui inverted green segment">
+			<p>AIS message statistics</p>
+		</div>
+		<div style="text-align: right;" class="ui inverted green segment">
+<!--			Connection: <i class="thumbs up icon"></i> -->
+		</div>
+	</div>
+	<div class="ui horizontal segments">
+		<div class="ui inverted green segment">
+<!--			<p>Messages in last 15 min.: N/A</p> -->
+		</div>
+		<div class="ui inverted green segment">
+<!--			<p>Messages in last hour: N/A</p> -->
+		</div>
+		<div class="ui inverted green segment">
+<!--			<p>Messages in last 24 hours: N/A</p> -->
+		</div>
+	</div>
 </div>
 {% endblock %}
