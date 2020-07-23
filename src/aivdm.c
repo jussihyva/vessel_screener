@@ -120,7 +120,8 @@ static void		count_messages(t_statistics *statistics,
 	return ;
 }
 
-static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db)
+static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db,
+														int payload_max_length)
 {
 	static int		counter = 0;
 	int				i;
@@ -161,6 +162,7 @@ static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db)
 		}
 		ft_printf("\n");
 		ft_printf("Most frequent country: %d\n", max_id);
+		ft_dprintf(2, "Maximum length of a payload string: %d\n", payload_max_length);
 	}
 	return ;
 }
@@ -233,9 +235,8 @@ int				main(int argc, char **argv)
 						{
 							ft_printf("SOG: %.1f\n", message->speed_over_ground);
 							print_payload(line, message);
-							ft_dprintf(2, "Maximum length of a payload string: %d\n", payload_max_length);
 						}
-						count_mmsi_mid(statistics, message->mmsi, db);
+						count_mmsi_mid(statistics, message->mmsi, db, payload_max_length);
 					}
 				}
 				ft_strdel(&payload_string);
