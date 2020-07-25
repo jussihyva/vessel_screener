@@ -1,4 +1,7 @@
+
 let filterTime = 900;
+const timeFilterElem = document.getElementById("time_period");
+
 
 $(document).ready(function () {
 	setInterval(function () { update_page(); }, 3000);
@@ -18,10 +21,13 @@ $(document).ready(function () {
 		}
 		$('#ui_modal').modal('dispose');
 	});
+
+	timeFilterElem.onchange = filterPeriod;
 });
 
 function filterPeriod() {
-	filterTime = document.getElementById("time_period").value;
+	filterTime = timeFilterElem.value;
+	console.log('value changed', filterTime);
 	update_page();
 }
 
