@@ -20,11 +20,10 @@ $(document).ready(function () {
 	});
 });
 
-// function filterPeriod()
-// {
-// 	filterTime = document.getElementById("time_period").value;
-// 	update_page();
-// }
+function filterPeriod() {
+	filterTime = document.getElementById("time_period").value;
+	update_page();
+}
 
 function update_page() {
 	$.ajax(
