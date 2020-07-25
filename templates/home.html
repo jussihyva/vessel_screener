@@ -1,53 +1,12 @@
 {%extends "layout.html" %}
 
 {% block content %}
-<script>
-	let filterTime = 900
-	$(document).ready(function()
-	{
-		setInterval(function() {update_page();}, 3000);
-		$("#add_mmsi_mid").click(function() {$('#ui_modal').modal('show');});
-		$("#save").click(function(){
-			let mmsi_mid = $("#mmsi_mid").val();
-			let mmsi_mid_list = mmsi_mid.split("\n");
-			for (var i = 0; i < mmsi_mid_list.length;  ++i)
-			{
-				$.ajax(
-				{
-					url: "/country",
-					type: "POST",
-					contentType: "application/json",
-					data:  JSON.stringify({"symbol": mmsi_mid_list[i]}),
-					dataType: "json"
-				})
-			}
-			$('#ui_modal').modal('dispose');
-		});
-	});
-	function filterPeriod()
-	{
-		filterTime = document.getElementById("time_period").value;
-		update_page();
-	}
-	function update_page()
-	{
-		$.ajax(
-			{
-				url: "/table",
-				type: "GET",
-				data:  {"timestamp": parseInt((Date.now() / 1000) - filterTime, 10)},
-				success: function(data, status)
-				{
-					document.getElementById("country_table").innerHTML = data
-				}
-			})
-	}
-</script>
 <div class="ui pointing inverted orange menu">
   <a class="active item">
     Countries
   </a>
 </div>
+
 <div style="border-style: hidden;" class="ui segments">
 	<div class="ui segment">
 			<label style="font-weight: bold;" >Select time period:</label>
@@ -59,9 +18,11 @@
 			</select>
 	</div>
 </div>
+
 <div id="country_table">
 	{% include "table.html" %}
 </div>
+
 <div class="ui segments">
 	<div class="ui horizontal segments">
 		<div style="text-align: center;" class="ui inverted green segment">
