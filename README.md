@@ -1,7 +1,10 @@
 ## Shipit
-> Includes AIVDM Decoder, Server & Web UI
+> Includes AIVDM Decoder & Vessel screener
 
 ### Development Setup
+
+#### Python
+
 Install pipenv
 
 `pip install --user pipenv`
@@ -17,3 +20,7 @@ Activate it
 Run server alone
 
 `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
+
+#### Node
+
+`npm install`
