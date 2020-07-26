@@ -1,44 +1,27 @@
 
-let filterTime = 900;
-const timeFilterElem = document.getElementById("time_period");
+let timeFilterSec = 15 * 60;
+const refreshInterval = 3000;
+const $timeFilter = document.getElementById("time_period");
+const $countryTable = document.getElementById("country_table");
 
-
-$(document).ready(function () {
-	setInterval(function () { update_page(); }, 3000);
-	$("#add_mmsi_mid").click(function () { $('#ui_modal').modal('show'); });
-	$("#save").click(function () {
-		let mmsi_mid = $("#mmsi_mid").val();
-		let mmsi_mid_list = mmsi_mid.split("\n");
-		for (var i = 0; i < mmsi_mid_list.length; ++i) {
-			$.ajax(
-				{
-					url: "/country",
-					type: "POST",
-					contentType: "application/json",
-					data: JSON.stringify({ "symbol": mmsi_mid_list[i] }),
-					dataType: "json"
-				})
-		}
-		$('#ui_modal').modal('dispose');
-	});
-
-	timeFilterElem.onchange = filterPeriod;
+window.addEventListener('DOMContentLoaded', () => {
+	setInterval(function () { updatePage(); }, refreshInterval);
+	$timeFilter.onchange = timeFilterChanged;
 });
 
-function filterPeriod() {
-	filterTime = timeFilterElem.value;
-	console.log('value changed', filterTime);
-	update_page();
+function timeFilterChanged() {
+	timeFilterSec = $timeFilter.value;
+	console.log('value changed', timeFilterSec);
+	updatePage();
 }
 
-function update_page() {
-	$.ajax(
-		{
-			url: "/table",
-			type: "GET",
-			data: { "timestamp": parseInt((Date.now() / 1000) - filterTime, 10) },
-			success: function (data) {
-				document.getElementById("country_table").innerHTML = data
-			}
-		})
+function updatePage() {
+	const timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
+	fetch('/table?timestamp='+ timestamp)
+	.then((res) => {
+		return res.text()
+	})
+	.then((text) => {
+		$countryTable.innerHTML = text;
+	})
 }
