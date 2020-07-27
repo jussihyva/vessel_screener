@@ -17,6 +17,10 @@ Activate it
 
 `pipenv shell`
 
+Fake data
+
+`cat test/new_ais_data_format.log | ./aivdm`
+
 Run server alone
 
 `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
