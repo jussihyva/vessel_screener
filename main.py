@@ -43,7 +43,7 @@ def home(request: Request, db: Session = Depends(get_db)):
             country.country = country_name[country.mmsi_mid]
             db.add(country)
             db.commit()
-    
+
     return templates.TemplateResponse("home.html",
     {
         "request": request,
@@ -51,7 +51,7 @@ def home(request: Request, db: Session = Depends(get_db)):
     })
 
 @app.get("/table")
-def home(request: Request, db: Session = Depends(get_db)):
+def table(request: Request, db: Session = Depends(get_db)):
     """
     Displays country code of vessels in The Aura river at Turku.
     """
@@ -63,7 +63,7 @@ def home(request: Request, db: Session = Depends(get_db)):
             country.country = country_name[country.mmsi_mid]
             db.add(country)
             db.commit()
-    
+
     return templates.TemplateResponse("table.html",
     {
         "request": request,
