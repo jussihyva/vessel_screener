@@ -25,9 +25,9 @@ Run server alone
 
 `uvicorn main:app --reload --host 0.0.0.0 --port 8000`
 
-Fetch realtime data
+Fetching data with
 
-`./fetch <url>`
+`./fetch.py <url> > ../realtime.log`
 
 #### Node
 
