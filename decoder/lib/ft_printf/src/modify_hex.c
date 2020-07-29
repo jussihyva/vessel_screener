@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/22 15:41:12 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/06/19 14:17:37 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/07 21:26:38 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char				*conv_unsigned_hex(va_list *ap, t_substring *substring,
 	(*attrs)++;
 	nbr = (unsigned long long *)ft_memalloc(sizeof(*nbr));
 	if (!substring->param_type)
-		*nbr = (unsigned int)(va_arg(*ap, void *));
+		*nbr = va_arg(*ap, unsigned int);
 	else
 		*nbr = read_o_u_x_param(substring->param_type->type, ap);
 	substring->par_value = nbr;

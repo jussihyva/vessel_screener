@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_unsigned_integer.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/10 10:13:41 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/01/10 10:15:08 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/07 21:27:20 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char					*conv_unsigned_int(va_list *ap,
 	(*attrs)++;
 	nbr = (unsigned long long *)ft_memalloc(sizeof(*nbr));
 	if (!substring->param_type)
-		*nbr = (unsigned int)(va_arg(*ap, void *));
+		*nbr = va_arg(*ap, unsigned int);
 	else
 		*nbr = read_o_u_x_param(substring->param_type->type, ap);
 	substring->par_value = nbr;
