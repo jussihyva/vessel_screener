@@ -6,7 +6,7 @@
 #    By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/04 11:34:07 by jkauppi           #+#    #+#              #
-#    Updated: 2020/06/19 09:28:45 by ubuntu           ###   ########.fr        #
+#    Updated: 2020/07/07 21:14:58 by ubuntu           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRC_FOLDER		=	./src
 LIBFT_FOLDER	=	./libft
 LIBFT_NAME		=	ft
 OBJ_FOLDER		=	./obj
-CC				=	clang
+CC				=	gcc
 
 INCLUDES		=	-I ${SRC_FOLDER} -I ${LIBFT_FOLDER}
 CFLAGS			=	-g -Wall -Werror -Wextra ${INCLUDES}

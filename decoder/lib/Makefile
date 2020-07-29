@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-LOG					=	/var/tmp/aivdm_decoder_lib_make.log
+LOG					=	/var/tmp/aivdm_decoder_lib_make_1.log
 LIBFT_H				=	libft.h
 FT_PRINTF_H			=	ft_printf.h
 LIBFT_A				=	libft.a
