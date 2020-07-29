@@ -3,6 +3,12 @@
 
 ### Development Setup
 
+Clone with
+
+```
+git clone --recurse-submodules -j8 git@github.com:jussihyva/aivdm_decoder.git
+```
+
 #### Python
 
 Install pipenv
