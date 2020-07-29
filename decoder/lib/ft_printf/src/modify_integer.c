@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   modify_integer.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 15:24:14 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/01/10 10:14:57 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/07 21:25:54 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ static long long		read_int_param(t_type type, va_list *ap)
 	else if (type == t)
 		nbr = (ptrdiff_t)(va_arg(*ap, void *));
 	else if (type == L)
-		nbr = (int)(va_arg(*ap, void *));
+		nbr = va_arg(*ap, long long);
 	else
-		nbr = (int)(va_arg(*ap, void *));
+		nbr = va_arg(*ap, int);
 	return (nbr);
 }
 
@@ -79,7 +79,7 @@ char					*conv_int(va_list *ap, t_substring *substring,
 	(*attrs)++;
 	nbr = (long long *)ft_memalloc(sizeof(*nbr));
 	if (!substring->param_type)
-		*nbr = (int)(va_arg(*ap, void *));
+		*nbr = va_arg(*ap, int);
 	else
 		*nbr = read_int_param(substring->param_type->type, ap);
 	substring->par_value = nbr;
