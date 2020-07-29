@@ -1,6 +1,6 @@
-[submodule "lib/libft"]
+[submodule "decoder/lib/libft"]
 	path = decoder/lib/libft
 	url = git@github.com:jussihyva/libft.git
-[submodule "lib/ft_printf"]
+[submodule "decoder/lib/ft_printf"]
 	path = decoder/lib/ft_printf
 	url = git@github.com:jussihyva/ft_printf.git
