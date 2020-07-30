@@ -6,7 +6,7 @@
 /*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/30 10:38:56 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/07/30 10:45:27 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static char		*ais_encoder(char *payload_string, int payload_string_length, char 
 	// 	ft_printf("Padding: %d String length: %d\n", padding, payload_string_length);
 	// 	ft_printf("Payload: %s\n", payload_string);
 	// }
+	(void)crc_string;
 	payload_data_size = payload_string_length / 4 + (payload_string_length % 4);
 	payload_data = (t_stream *)ft_memalloc(sizeof(*payload_data) * payload_data_size);
 	ft_memcpy(payload_data, payload_string, payload_string_length);
