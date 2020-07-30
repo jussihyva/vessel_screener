@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/18 12:53:17 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/07/30 10:38:56 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ static char		*ais_encoder(char *payload_string, int payload_string_length, char 
 	size_t		payload_data_size;
 	char		*ais_data;
 	size_t		ais_data_size;
-	int			padding;
+	// int			padding;
 
-	padding = crc_string[0] - '0';
-	padding = padding;
+	// padding = crc_string[0] - '0';
+	// padding = padding;
 	// if (padding)
 	// {
 	// 	ft_printf("Padding: %d String length: %d\n", padding, payload_string_length);
