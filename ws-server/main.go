@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"net/http"
 	"time"
@@ -18,9 +19,9 @@ const (
 // Message ...
 // [{'AIS': {'MMSI': 230985650, 'TIMESTAMP': '2020-07-30 16:35:25 UTC', 'LATITUDE': 60.46008, 'LONGITUDE': 21.91846, 'COURSE': 296.0, 'SPEED': 0.2, 'HEADING': 68, 'NAVSTAT': 5, 'IMO': 0, 'NAME': 'OSMERUS', 'CALLSIGN': 'OH5332', 'TYPE': 30, 'A': 5, 'B': 10, 'C': 4, 'D': 1, 'DRAUGHT': 3.0, 'DESTINATION': 'MERIMASKU', 'ETA_AIS': '04-28 15:30', 'ETA': '2020-04-28 15:30:00', 'SRC': 'TER', 'ZONE': 'Baltic Sea', 'ECA': True}},
 type Message struct {
-	MMSI string
-	// TODO: Change this
-	Timestamp string
+	ID        int
+	Mmsi      int
+	Timestamp time.Time
 	Name      string
 }
 
@@ -37,14 +38,14 @@ func (s *server) createResponse() {
 		fmt.Println(s.err)
 		s.jsonResponse = []byte("{}")
 	}
-	fmt.Println("LEN:", len(s.messages))
+	fmt.Println("LEN:", len(s.messages), s.messages)
 }
 
 // Update data every nth second
 func (s *server) updateData() {
 	ticker := time.NewTicker(updateInterval)
 	for range ticker.C {
-		s.db.Find(&s.messages)
+		s.db.Order("timestamp asc").Select("id, mmsi, name, timestamp").Find(&s.messages)
 		// Because response is same for all clients, we can create it here
 		s.createResponse()
 	}
@@ -60,6 +61,9 @@ func (s *server) wsHandle(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
+	serveStatic := flag.Bool("static", false, "Serve static folder also")
+	flag.Parse()
+
 	s := &server{jsonResponse: []byte("{}")}
 	db, err := gorm.Open("sqlite3", "../data.db")
 	if err != nil {
@@ -73,7 +77,9 @@ func main() {
 	go s.updateData()
 
 	http.HandleFunc("/ws", s.wsHandle)
-	// http.Handle("/", http.FileServer(http.Dir("./static")))
+	if *serveStatic == true {
+		http.Handle("/", http.FileServer(http.Dir("./static")))
+	}
 
 	if err := http.ListenAndServe(":8001", nil); err != nil {
 		fmt.Println(err)
