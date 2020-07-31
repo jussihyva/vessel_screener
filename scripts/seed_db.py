@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, DateTime
 
-# We can run this from Makefile
+# Doesn't matter where script was started
 dir_path = os.path.dirname(os.path.realpath(__file__))
 DB_PATH = "sqlite:///" + os.path.join(dir_path, "../data.db")
 LOG_PATH = os.path.join(dir_path, "../assets/external_json_small.log")
@@ -42,11 +42,9 @@ for line in lines:
 		continue
 	data_list = ast.literal_eval(line)
 	for item in data_list:
-
-		# Real example, but lets fake it
+		# Real example below, but lets fake timestamp
 		# dtime = datetime.strptime(item["AIS"]["TIMESTAMP"], "%Y-%m-%d %H:%M:%S %Z")
 		dtime = datetime.now()
-
 		# noqa pylint: disable=E1120
 		ins = messages.insert().values(
 			timestamp = dtime,
@@ -54,6 +52,5 @@ for line in lines:
 			name = item["AIS"]["NAME"],
 		)
 		res = conn.execute(ins)
-		print(res)
 		# Simulate real data
 		time.sleep(random.randint(1, 5))
