@@ -4,7 +4,9 @@ aivdm.log
 aivdm
 *.pyc
 __pycache__
-country.db
+*.db
+*.db-journal
 .vscode
+vessel-server
 node_modules
 *.dSYM
