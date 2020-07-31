@@ -25,7 +25,6 @@ type Message struct {
 }
 
 type server struct {
-	// Simulate data, this will be *DB
 	err          error
 	db           *gorm.DB
 	messages     []Message
@@ -76,7 +75,7 @@ func main() {
 	http.HandleFunc("/ws", s.wsHandle)
 	http.Handle("/", http.FileServer(http.Dir("./static")))
 
-	if err := http.ListenAndServe(":8000", nil); err != nil {
+	if err := http.ListenAndServe(":8001", nil); err != nil {
 		fmt.Println(err)
 		return
 	}

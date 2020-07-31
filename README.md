@@ -37,7 +37,7 @@ Start a websocket server in a new terminal window
 $> go build
 $> ./vessel-server
 ```
-Goto http://localhost:8000 (Try it with multiple browsers)
+Goto http://localhost:8001 (Try it with multiple browsers)
 
 #### Node
 
