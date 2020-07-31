@@ -71,6 +71,11 @@ func upgradeConnection(w http.ResponseWriter, r *http.Request) (*websocket.Conn,
 
 func (s *server) writeResponse(conn *websocket.Conn) {
 	ticker := time.NewTicker(pushInterval)
+	err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	for t := range ticker.C {
 		log.Printf("%+v\n", t)
 		err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
