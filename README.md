@@ -1,5 +1,5 @@
-## Shipit
-> Includes AIVDM Decoder & Vessel screener
+## Good Name For Project Needed
+> Includes AIVDM Decoder, Couple servers, Scripts & Front-end
 
 ### Development Setup
 
@@ -9,7 +9,7 @@ Clone with
 git clone --recurse-submodules -j8 git@github.com:jussihyva/aivdm_decoder.git
 ```
 
-#### Python
+#### Pipenv
 
 Install pipenv
 
@@ -23,18 +23,27 @@ Activate it
 
 `pipenv shell`
 
-Fake data
 
-`cat test/new_ais_data_format.log | ./aivdm`
+#### Run
+Fake getting realtime data
 
-Run server alone
+```sh
+$> cd scripts
+$> ./seed_db.py
+```
 
-`uvicorn main:app --reload --host 0.0.0.0 --port 8000`
-
-Fetching data with
-
-`./fetch.py <url> > ../realtime.log`
+Start a websocket server in a new terminal window
+```sh
+$> go build
+$> ./vessel-server
+```
+Goto http://localhost:8000 (Try it with multiple browsers)
 
 #### Node
 
 `npm install`
+
+#### Scripts
+Fetch data form real API
+
+`./fetch.py <url> > ../realtime.log`
