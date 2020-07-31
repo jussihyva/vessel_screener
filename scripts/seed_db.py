@@ -4,11 +4,14 @@ import json
 import ast
 import time
 import random
+import os
 from datetime import datetime
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, DateTime
 
-DB_PATH = "sqlite:///../data.db"
-LOG_PATH = "../assets/external_json_small.log"
+# We can run this from Makefile
+dir_path = os.path.dirname(os.path.realpath(__file__))
+DB_PATH = "sqlite:///" + os.path.join(dir_path, "../data.db")
+LOG_PATH = os.path.join(dir_path, "../assets/external_json_small.log")
 
 engine = create_engine(DB_PATH, echo = True)
 meta = MetaData()
@@ -39,7 +42,11 @@ for line in lines:
 		continue
 	data_list = ast.literal_eval(line)
 	for item in data_list:
-		dtime = datetime.strptime(item["AIS"]["TIMESTAMP"], "%Y-%m-%d %H:%M:%S %Z")
+
+		# Real example, but lets fake it
+		# dtime = datetime.strptime(item["AIS"]["TIMESTAMP"], "%Y-%m-%d %H:%M:%S %Z")
+		dtime = datetime.now()
+
 		# noqa pylint: disable=E1120
 		ins = messages.insert().values(
 			timestamp = dtime,
