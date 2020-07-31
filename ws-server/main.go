@@ -73,7 +73,7 @@ func main() {
 	go s.updateData()
 
 	http.HandleFunc("/ws", s.wsHandle)
-	http.Handle("/", http.FileServer(http.Dir("./static")))
+	// http.Handle("/", http.FileServer(http.Dir("./static")))
 
 	if err := http.ListenAndServe(":8001", nil); err != nil {
 		fmt.Println(err)
