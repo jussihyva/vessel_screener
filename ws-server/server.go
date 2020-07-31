@@ -56,6 +56,7 @@ func (s *server) wsHandle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
+	defer ws.Close()
 	s.writeResponse(ws)
 }
 
