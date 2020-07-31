@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -29,8 +28,8 @@ func Upgrade(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 func (s *server) Writer(conn *websocket.Conn) {
 	ticker := time.NewTicker(pushInterval)
 	for t := range ticker.C {
-		fmt.Printf("counter: [%d] %+v\n", s.counter, t)
-		err := conn.WriteMessage(websocket.TextMessage, []byte(strconv.Itoa(s.counter)))
+		fmt.Printf("%+v\n", t)
+		err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
 		if err != nil {
 			fmt.Println(err)
 			return
