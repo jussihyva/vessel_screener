@@ -16,8 +16,8 @@ window.addEventListener('DOMContentLoaded', () => {
 function render(data) {
 	var list = document.createElement('ul');
 	data.forEach(elem => {
-		const timestamp = elem['Timestamp'];
-		const name = elem['Name'];
+		const timestamp = elem['timestamp'];
+		const name = elem['name'];
 		const item = document.createElement('li');
 		item.innerHTML = name + ' ' + timestamp;
 		list.appendChild(item);
