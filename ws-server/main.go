@@ -46,18 +46,9 @@ func (s *server) createResponse() {
 func (s *server) updateData() {
 	ticker := time.NewTicker(updateInterval)
 	for range ticker.C {
-		// if s.latest.IsZero() {
-		// 	fmt.Println("Latest empty")
-		// }
 		now := time.Now()
 		since := now.Add(-(time.Second * 10))
 		s.db.Where("timestamp > ?", since).Order("timestamp desc").Select("id, mmsi, name, timestamp").Find(&s.messages)
-		// if len(s.messages) > 0 {
-		// 	s.latest = s.messages[len(s.messages)-1].Timestamp
-		// 	fmt.Println("Latest:", s.latest)
-		// }
-
-		// Because response is same for all clients, we can create it here
 		s.createResponse()
 	}
 }
