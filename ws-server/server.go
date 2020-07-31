@@ -55,6 +55,7 @@ func (s *server) wsHandle(w http.ResponseWriter, r *http.Request) {
 	ws, err := upgradeConnection(w, r)
 	if err != nil {
 		log.Println(err)
+		return
 	}
 	defer ws.Close()
 	s.writeResponse(ws)
