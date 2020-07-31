@@ -4,7 +4,8 @@ import json
 import ast
 import time
 import random
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from datetime import datetime
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, DateTime
 
 DB_PATH = "sqlite:///../data.db"
 LOG_PATH = "../assets/external_json_small.log"
@@ -19,7 +20,7 @@ messages = Table(
 	Column("id", Integer, primary_key = True),
 	Column("mmsi", Integer),
 	Column("name", String),
-	Column("timestamp", String),
+	Column("timestamp", DateTime),
 )
 
 meta.create_all(engine)
@@ -38,9 +39,10 @@ for line in lines:
 		continue
 	data_list = ast.literal_eval(line)
 	for item in data_list:
+		dtime = datetime.strptime(item["AIS"]["TIMESTAMP"], "%Y-%m-%d %H:%M:%S %Z")
 		# noqa pylint: disable=E1120
 		ins = messages.insert().values(
-			timestamp = item["AIS"]["TIMESTAMP"],
+			timestamp = dtime,
 			mmsi = item["AIS"]["MMSI"],
 			name = item["AIS"]["NAME"],
 		)

@@ -10,6 +10,22 @@
 	<h2 id="title"></h2>
 	<script>
 
+		const title = document.getElementById('title');
+		const ws = new WebSocket('ws://localhost:8001/ws');
+
+		ws.onopen = function(event) {
+			console.log('Opened');
+		}
+
+		ws.onerror = function(error) {
+			console.log(error);
+		}
+
+		ws.onmessage = function(event) {
+			console.log(event.data);
+			title.innerHTML = event.data;
+		}
+
 	</script>
 </body>
 </html>
