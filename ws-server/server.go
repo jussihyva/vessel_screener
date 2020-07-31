@@ -17,7 +17,7 @@ const (
 	// Send messages to client every X sec
 	pushInterval = 5 * time.Second
 	// Query messages newer than
-	timeAgo = 10 * time.Second
+	timeAgo = 30 * time.Second
 )
 
 var upgrader = websocket.Upgrader{

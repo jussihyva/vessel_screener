@@ -7,8 +7,8 @@ import "time"
 
 // Message struct
 type Message struct {
-	ID        int
-	Mmsi      int
-	Timestamp time.Time
-	Name      string
+	ID        int       `json:"id"`
+	Mmsi      int       `json:"mmsi"`
+	Timestamp time.Time `json:"timestamp"`
+	Name      string    `json:"name"`
 }
