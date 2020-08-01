@@ -1,5 +1,9 @@
-## Good Name For Project Needed
+## Vessel Screener
 > Includes AIVDM Decoder, Couple servers, Scripts & Front-end
+
+<p align="center">
+	<img width=400 src="assets/diagram.png">
+</p>
 
 ### Development Setup
 
