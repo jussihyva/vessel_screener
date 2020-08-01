@@ -2,6 +2,7 @@
 > Includes AIVDM Decoder, Couple servers, Scripts & Front-end
 
 <p align="center">
+	<br>
 	<img width=400 src="assets/diagram.png">
 </p>
 
