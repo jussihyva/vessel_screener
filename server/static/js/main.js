@@ -1,5 +1,5 @@
 
-const useSocket = true;
+const useSocket = false;
 
 let timeFilterSec = 15 * 60;
 const refreshInterval = 3000;
