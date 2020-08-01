@@ -51,11 +51,11 @@ func (s *server) updateData() {
 func (s *server) createResponse() {
 	s.mu.Lock()
 	s.jsonResponse, s.err = json.Marshal(s.messages)
-	s.mu.Unlock()
 	if s.err != nil {
 		log.Println(s.err)
 		s.jsonResponse = []byte("{}")
 	}
+	s.mu.Unlock()
 }
 
 func (s *server) wsHandle(w http.ResponseWriter, r *http.Request) {
