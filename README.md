@@ -25,6 +25,19 @@ Activate it
 
 
 #### Run
+
+##### Makefile
+
+Test websocket server with faked realtime data
+
+`make`
+
+Run python server with sockets and faked realtime data
+
+`make run-python`
+
+##### Manual
+
 Fake getting realtime data
 
 ```sh
