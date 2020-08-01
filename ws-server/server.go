@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -30,11 +31,15 @@ type server struct {
 	db           *gorm.DB
 	messages     []Message
 	jsonResponse []byte
+	mu           sync.Mutex
 }
 
 // Update data every nth second
 func (s *server) updateData() {
 	ticker := time.NewTicker(queryInterval)
+	// NOTE: How about closing ticker channnel, is it needed?
+	defer ticker.Stop()
+
 	for range ticker.C {
 		since := time.Now().Add(-(timeAgo))
 		s.db.Where("timestamp > ?", since).Order("timestamp desc").Select("id, mmsi, name, timestamp").Find(&s.messages)
@@ -44,7 +49,9 @@ func (s *server) updateData() {
 }
 
 func (s *server) createResponse() {
+	s.mu.Lock()
 	s.jsonResponse, s.err = json.Marshal(s.messages)
+	s.mu.Unlock()
 	if s.err != nil {
 		log.Println(s.err)
 		s.jsonResponse = []byte("{}")
@@ -73,19 +80,30 @@ func upgradeConnection(w http.ResponseWriter, r *http.Request) (*websocket.Conn,
 
 func (s *server) writeResponse(conn *websocket.Conn) {
 	ticker := time.NewTicker(pushInterval)
-	err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
-	if err != nil {
-		log.Println(err)
+	// NOTE: How about closing ticker channnel, is it needed?
+	defer ticker.Stop()
+
+	// Write first message without waiting
+	if err := s.sendTextMessage(conn); err != nil {
 		return
 	}
 	for t := range ticker.C {
 		log.Printf("%+v\n", t)
-		err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
-		if err != nil {
-			log.Println(err)
+		if err := s.sendTextMessage(conn); err != nil {
 			return
 		}
 	}
+}
+
+func (s *server) sendTextMessage(conn *websocket.Conn) error {
+	s.mu.Lock()
+	err := conn.WriteMessage(websocket.TextMessage, s.jsonResponse)
+	s.mu.Unlock()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }
 
 func newServer() *server {
