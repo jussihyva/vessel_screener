@@ -1,7 +1,7 @@
 all: build run-ws
 
 build:
-	cd ws-server && go build -o vessel-server
+	cd ws-server && go build -race -o vessel-server
 
 seed:
 	rm data.db
