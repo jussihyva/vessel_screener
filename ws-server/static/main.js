@@ -1,6 +1,6 @@
-const app = document.getElementById('app');
 
 window.addEventListener('DOMContentLoaded', () => {
+	const app = document.getElementById('app');
 	const ws = new WebSocket('ws://localhost:8001/ws');
 	ws.onopen = function(event) {
 		console.log('WebSocket connection opened');
@@ -9,11 +9,11 @@ window.addEventListener('DOMContentLoaded', () => {
 		console.log(error);
 	}
 	ws.onmessage = function(event) {
-		render(JSON.parse(event.data));
+		render(app, JSON.parse(event.data));
 	}
 });
 
-function render(data) {
+function render(container, data) {
 	var list = document.createElement('ul');
 	data.forEach(elem => {
 		const timestamp = elem['timestamp'];
@@ -22,6 +22,6 @@ function render(data) {
 		item.innerHTML = name + ' ' + timestamp;
 		list.appendChild(item);
 	});
-	app.innerHTML = '';
-	app.appendChild(list);
+	container.innerHTML = '';
+	container.appendChild(list);
 }
