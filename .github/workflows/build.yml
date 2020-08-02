@@ -2,7 +2,7 @@ name: Continuous Delivery
 on:
   push:
     branches:
-      - mtuomine
+      - production
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
     - name: Get source code
       uses: actions/checkout@v2
       with:
-        ref: "mtuomine"
+        ref: "production"
         submodules: true
 
     - name: Make deploy directory
@@ -48,7 +48,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
+        name: release
         path: deploy/
 
   # deploy:
