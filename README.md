@@ -4,7 +4,7 @@
 
 <p align="center">
 	<br>
-	<img width=400 src="assets/diagram.png">
+	<img width=400 src="assets/images/diagram.png">
 </p>
 
 ### Development Setup
@@ -12,7 +12,7 @@
 Clone with
 
 ```
-git clone --recurse-submodules -j8 git@github.com:jussihyva/aivdm_decoder.git
+git clone --recurse-submodules -j8 git@github.com:jussihyva/vessel_screener.git
 ```
 
 #### Pipenv
