@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   message_123.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 13:19:02 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 15:47:19 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/08/02 22:04:54 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	parse_message_123(char *ais_data, t_message_123 *message_123)
 	message_123->course_over_ground += (size_t)record_123->course_over_ground_0;
 	message_123->true_heading = (size_t)record_123->true_heading_1 << 2;
 	message_123->true_heading += (size_t)record_123->true_heading_0;
-	message_123->timestamp = (int)record_123->timestamp;
+	message_123->timestamp.vessel = (int)record_123->timestamp;
 	message_123->special_manoeuvre_indicator = (int)record_123->special_manoeuvre_indicator;
 	message_123->spare = (int)record_123->spare;
 	message_123->raim_flag = (int)record_123->raim_flag;
