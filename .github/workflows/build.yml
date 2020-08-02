@@ -19,8 +19,6 @@ jobs:
       run: mkdir -p deploy
 
     - name: Compile decoder
-      env:
-        GOPROXY: "https://proxy.golang.org"
       run: cd decoder && make
 
     - name: Copy decoder
