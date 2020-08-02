@@ -1,5 +1,5 @@
 <h1 align="center">
-	Vessel Screener
+	Vessel Screener (Work in Progress)
 </h1>
 
 <p align="center">
@@ -56,6 +56,11 @@ Look [Makefile](/Makefile)
 [Seed](scripts/seed_db.py) database with sample data and fake realtime data
 
 `/scripts/seed_db.py`
+
+### :trophy: Deployment
+
+Every time when code is pushed to production branch, our [GitHub Actions](/.github/workflows/build.yml)
+will install dependencies, compiles binaries and finally uploads artifact.
 
 ### Created By
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
