@@ -3,19 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/30 10:45:27 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/08/02 07:44:22 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
 
-static void		print_payload(char *line, t_message *message)
+static void		print_message_123(char *line, t_message_123 *message_123)
 {
 	ft_printf("%s\n", line);
-	ft_printf("MMSI: %-9d,  Message: %x\n", message->mmsi, message->message_id);
+	ft_printf("%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s ",
+		"message_id", "repeat_indicator", "mmsi", "navigational_status",
+		"rate_of_turn", "speed_over_ground", "position_accuracy", "longitude",
+		"latitude", "course_over_ground", "true_heading", "timestamp", 
+		"special_manoeuvre_indicator", "spare", "raim_flag",
+		"communication_state_1", "dummy_1\n");
+//	ft_printf("MMSI: %-9d,  Message: %x\n", message_123->mmsi, message_123->message_id);
+	ft_printf(" %8d", message_123->message_id);
+	ft_printf(" %8d", message_123->repeat_indicator);
+	ft_printf(" %8d", message_123->mmsi);
+	ft_printf(" %8d", message_123->navigational_status);
+	ft_printf(" %8d", message_123->rate_of_turn);
+	ft_printf(" %8f", message_123->speed_over_ground);
+	ft_printf(" %8d", message_123->position_accuracy);
+	ft_printf(" %8d", message_123->longitude);
+	ft_printf(" %8d", message_123->latitude);
+	ft_printf(" %8d", message_123->course_over_ground);
+	ft_printf(" %8d", message_123->true_heading);
+	ft_printf(" %8d", message_123->timestamp);
+	ft_printf(" %8d", message_123->special_manoeuvre_indicator);
+	ft_printf(" %8d", message_123->spare);
+	ft_printf(" %8d", message_123->raim_flag);
+	ft_printf(" %8d", message_123->communication_state_1);
+	ft_printf(" %8d\n", message_123->dummy_1);
 	return ;
 }
 
@@ -181,7 +204,7 @@ int				main(int argc, char **argv)
 	char			*payload_string_tmp;
 	int				payload_string_length;
 	char			*padding;
-	t_message		*message;
+	t_message_123	*message_123;
 	sqlite3			*db;
 	int				payload_max_length;
 
@@ -191,7 +214,7 @@ int				main(int argc, char **argv)
 	ft_read_opt(opt, &argc, &argv);
 	line = NULL;
 	ok_cnt = 0;
-	message = (t_message *)ft_memalloc(sizeof(*message));
+	message_123 = (t_message_123 *)ft_memalloc(sizeof(*message_123));
 	statistics = (t_statistics *)ft_memalloc(sizeof(*statistics));
 	message_id = (t_message_id *)ft_memalloc(sizeof(*message_id));
 	payload_string = NULL;
@@ -231,13 +254,13 @@ int				main(int argc, char **argv)
 					if ((t_message_type)message_id->message_id >= e_1_position_report &&
 							(t_message_type)message_id->message_id <= e_3_position_report)
 					{
-						parse_message_123(ais_data, message);
-						if (message->speed_over_ground > 0)
+						parse_message_123(ais_data, message_123);
+						if (message_123->speed_over_ground > 0)
 						{
-							ft_printf("SOG: %.1f\n", message->speed_over_ground);
-							print_payload(line, message);
+							ft_printf("SOG: %.1f\n", message_123->speed_over_ground);
+							print_message_123(line, message_123);
 						}
-						count_mmsi_mid(statistics, message->mmsi, db, payload_max_length);
+						count_mmsi_mid(statistics, message_123->mmsi, db, payload_max_length);
 					}
 				}
 				ft_strdel(&payload_string);

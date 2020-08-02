@@ -6,7 +6,7 @@
 /*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/07/18 12:35:00 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/02 07:17:26 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,26 @@ typedef struct		s_statistics
 	int				mmsi_mid_counter[COUNTRIES];
 }					t_statistics;
 
-typedef struct		s_message
+typedef struct		s_message_123
 {
 	int			message_id;
-	double		speed_over_ground;
+	int			repeat_indicator;
 	int			mmsi;
-}					t_message;
+	int			navigational_status;
+	int			rate_of_turn;
+	double		speed_over_ground;
+	int			position_accuracy;
+	int			longitude;
+	int			latitude;
+	int			course_over_ground;
+	int			true_heading;
+	int			timestamp;
+	int			special_manoeuvre_indicator;
+	int			spare;
+	int			raim_flag;
+	int			communication_state_1;
+	int			dummy_1;
+}					t_message_123;
 
 void				ft_step_args(int *argc, char ***argv);
 void				ft_read_opt(t_opt *opt, int *argc, char ***argv);
@@ -80,7 +94,7 @@ int					validate_input_record(char **aivdm_record_array, char *line,
 void				print_hex(char *file_content, ssize_t size);
 void				print_bin(char *file_content, ssize_t size);
 void				release_string_array(char **str_array);
-void				parse_message_123(char *ais_data, t_message *message);
+void				parse_message_123(char *ais_data, t_message_123 *message_123);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
 void				select_sqlite3(sqlite3 *db, int mmsi_mid);
