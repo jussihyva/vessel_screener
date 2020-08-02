@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-Message printout format and tit/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mtuomine <mtuomine@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 23:06:45 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/03 00:05:33 by mtuomine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static void		print_message_123(char *line, t_message_123 *message_123)
 	ft_printf("%s %s %10s %s %s %s %s %s %s %s %s %s %s %s %s %s %s ",
 		"message_id", "repeat_indicator", "mmsi", "navigational_status",
 		"rate_of_turn", "speed_over_ground", "position_accuracy", "longitude",
-		"latitude", "course_over_ground", "true_heading", "timestamp", 
+		"latitude", "course_over_ground", "true_heading", "timestamp",
 		"special_manoeuvre_indicator", "spare", "raim_flag",
 		"communication_state", "dummy\n");
 //	ft_printf("MMSI: %-9d,  Message: %x\n", message_123->mmsi, message_123->message_id);
