@@ -53,7 +53,7 @@ Look [Makefile](/Makefile)
 
 `/scripts/fetch.py <url> > realtime.log`
 
-[Seed](scripts/seed_db.py) database with sample data and faking realtime data
+[Seed](scripts/seed_db.py) database with sample data and fake realtime data
 
 `/scripts/seed_db.py`
 
