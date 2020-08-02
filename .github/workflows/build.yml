@@ -37,15 +37,13 @@ jobs:
         go-version: ^1.14
       id: go
 
-    - name: Install websocker server dependencies
-      env:
-        GOPROXY: "https://proxy.golang.org"
-      run: cd ws-server && go get ./...
-
     - name: Build websocket server
       env:
         GOPROXY: "https://proxy.golang.org"
-      run: go build -v -o ./deploy/vessel-server ws-server/*.go
+      run: |
+        cd ws-server
+        go get ./...
+        go build -v -o ../deploy/vessel-server .
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
