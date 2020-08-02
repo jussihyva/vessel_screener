@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+Message printout format and tit/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 15:48:08 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/08/02 23:06:45 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,14 @@
 
 static void		print_message_123(char *line, t_message_123 *message_123)
 {
+    struct tm	ts;
+    char		buf[80];
+
+    ts = *localtime(&message_123->timestamp.ais_dispatcher);
+    strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
 	ft_printf("%s\n", line);
-	ft_printf("%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s ",
+	ft_printf("AIS time: %d %s (%d)\n", message_123->timestamp.ais_dispatcher, buf, message_123->timestamp.vessel);
+	ft_printf("%s %s %10s %s %s %s %s %s %s %s %s %s %s %s %s %s %s ",
 		"message_id", "repeat_indicator", "mmsi", "navigational_status",
 		"rate_of_turn", "speed_over_ground", "position_accuracy", "longitude",
 		"latitude", "course_over_ground", "true_heading", "timestamp", 
@@ -23,22 +29,22 @@ static void		print_message_123(char *line, t_message_123 *message_123)
 		"communication_state", "dummy\n");
 //	ft_printf("MMSI: %-9d,  Message: %x\n", message_123->mmsi, message_123->message_id);
 	ft_printf(" %8d", message_123->message_id);
-	ft_printf(" %8d", message_123->repeat_indicator);
-	ft_printf(" %8d", message_123->mmsi);
-	ft_printf(" %8d", message_123->navigational_status);
-	ft_printf(" %8d", message_123->rate_of_turn);
-	ft_printf(" %8f", message_123->speed_over_ground);
-	ft_printf(" %8d", message_123->position_accuracy);
-	ft_printf(" %8d", message_123->longitude);
+	ft_printf(" %16d", message_123->repeat_indicator);
+	ft_printf(" %10d", message_123->mmsi);
+	ft_printf(" %19d", message_123->navigational_status);
+	ft_printf(" %12d", message_123->rate_of_turn);
+	ft_printf(" %17f", message_123->speed_over_ground);
+	ft_printf(" %17d", message_123->position_accuracy);
+	ft_printf(" %9d", message_123->longitude);
 	ft_printf(" %8d", message_123->latitude);
-	ft_printf(" %8d", message_123->course_over_ground);
-	ft_printf(" %8d", message_123->true_heading);
-	ft_printf(" %8d", message_123->timestamp);
-	ft_printf(" %8d", message_123->special_manoeuvre_indicator);
-	ft_printf(" %8d", message_123->spare);
-	ft_printf(" %8d", message_123->raim_flag);
-	ft_printf(" %8d", message_123->communication_state);
-	ft_printf(" %8d\n", message_123->dummy);
+	ft_printf(" %18d", message_123->course_over_ground);
+	ft_printf(" %12d", message_123->true_heading);
+	ft_printf(" %9d", message_123->timestamp.vessel);
+	ft_printf(" %27d", message_123->special_manoeuvre_indicator);
+	ft_printf(" %5d", message_123->spare);
+	ft_printf(" %9d", message_123->raim_flag);
+	ft_printf(" %19d", message_123->communication_state);
+	ft_printf(" %5d\n", message_123->dummy);
 	return ;
 }
 
@@ -161,7 +167,7 @@ static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db,
 	select_sqlite3(db, mmsi_mid);
 	statistics->mmsi_mid_counter[mmsi_mid]++;
 	counter++;
-	if (!(counter % 20))
+	if (!(counter % 200))
 	{
 		i = -1;
 		while (++i < COUNTRIES)
@@ -207,6 +213,7 @@ int				main(int argc, char **argv)
 	t_message_123	*message_123;
 	sqlite3			*db;
 	int				payload_max_length;
+	int				ais_dispatcher_timestamp;
 
 	ft_step_args(&argc, &argv);
 	open_sqlite3(&db);
@@ -221,7 +228,10 @@ int				main(int argc, char **argv)
 	payload_max_length = 0;
 	while (ft_get_next_line(opt->fd, &line))
 	{
-		aivdm_record_array = parse_input_line(line);
+		ais_dispatcher_timestamp = 0;
+		aivdm_record_array = parse_input_line(line, &ais_dispatcher_timestamp);
+		if (ais_dispatcher_timestamp)
+			message_123->timestamp.ais_dispatcher = ais_dispatcher_timestamp;
 		if (aivdm_record_array && !validate_input_record(aivdm_record_array,
 																line, &ok_cnt))
 		{
@@ -255,9 +265,9 @@ int				main(int argc, char **argv)
 							(t_message_type)message_id->message_id <= e_3_position_report)
 					{
 						parse_message_123(ais_data, message_123);
-						if (message_123->speed_over_ground > 0)
+						if (message_123->speed_over_ground >= 0)
 						{
-							ft_printf("SOG: %.1f\n", message_123->speed_over_ground);
+//							ft_printf("SOG: %.1f\n", message_123->speed_over_ground);
 							print_message_123(line, message_123);
 						}
 						count_mmsi_mid(statistics, message_123->mmsi, db, payload_max_length);
