@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   message_123.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/12 14:06:28 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 06:52:54 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/02 15:39:35 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct		s_record_123
 						special_manoeuvre_indicator		:	2;
 	unsigned char		communication_state_2			:	8;
 	unsigned char		communication_state_1			:	8;
-	unsigned char		dummy_1							:	7,
+	unsigned char		dummy							:	7,
 						communication_state_0			:	1;
 }					t_record_123;
 
