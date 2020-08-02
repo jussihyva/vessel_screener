@@ -15,6 +15,12 @@ Clone with
 git clone --recurse-submodules -j8 git@github.com:jussihyva/vessel_screener.git
 ```
 
+Or update
+
+```
+git submodule update --init --recursive
+```
+
 #### Pipenv
 
 Install pipenv
