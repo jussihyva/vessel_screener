@@ -15,13 +15,13 @@ jobs:
         ref: "mtuomine"
         submodules: true
 
+    - name: Make deploy directory
+      run: mkdir -p deploy
+
     - name: Compile decoder
       env:
         GOPROXY: "https://proxy.golang.org"
       run: cd decoder && make
-
-    - name: Make deploy directory
-      run: mkdir -p deploy
 
     - name: Copy decoder
       run: cp decoder/aivdm deploy/
@@ -37,10 +37,10 @@ jobs:
         go-version: ^1.14
       id: go
 
-    - name: Go tests
+    - name: Install websocker server dependencies
       env:
         GOPROXY: "https://proxy.golang.org"
-      run: cd ws-server && go test -v ./...
+      run: cd ws-server && go get ./...
 
     - name: Build websocket server
       env:
