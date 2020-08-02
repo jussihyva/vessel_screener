@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
+/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 15:39:17 by jkauppi          ###   ########.fr       */
+/*   Updated: 2020/08/02 22:50:59 by ubuntu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "errno.h"
 # include <fcntl.h>
 #include <sqlite3.h>
+#include <time.h>
 
 # define PRINT_OK 500
 # define NUM_OF_FIELDS 7
@@ -34,6 +35,13 @@ typedef struct		s_opt
 	short			flags;
 	int				fd;
 }					t_opt;
+
+typedef struct		s_timestamp
+{
+	int				vessel;
+	time_t			ais_dispatcher;
+	time_t			decoder;
+}					t_timestamp;
 
 typedef enum		e_message_type
 {
@@ -68,23 +76,23 @@ typedef struct		s_statistics
 
 typedef struct		s_message_123
 {
-	int			message_id;
-	int			repeat_indicator;
-	int			mmsi;
-	int			navigational_status;
-	int			rate_of_turn;
-	double		speed_over_ground;
-	int			position_accuracy;
-	int			longitude;
-	int			latitude;
-	int			course_over_ground;
-	int			true_heading;
-	int			timestamp;
-	int			special_manoeuvre_indicator;
-	int			spare;
-	int			raim_flag;
-	int			communication_state;
-	int			dummy;
+	t_timestamp		timestamp;
+	int				message_id;
+	int				repeat_indicator;
+	int				mmsi;
+	int				navigational_status;
+	int				rate_of_turn;
+	double			speed_over_ground;
+	int				position_accuracy;
+	int				longitude;
+	int				latitude;
+	int				course_over_ground;
+	int				true_heading;
+	int				special_manoeuvre_indicator;
+	int				spare;
+	int				raim_flag;
+	int				communication_state;
+	int				dummy;
 }					t_message_123;
 
 void				ft_step_args(int *argc, char ***argv);
@@ -98,6 +106,6 @@ void				parse_message_123(char *ais_data, t_message_123 *message_123);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
 void				select_sqlite3(sqlite3 *db, int mmsi_mid);
-char				**parse_input_line(char *line);
+char				**parse_input_line(char *line, int *ais_dispatcher_timestamp);
 
 #endif
