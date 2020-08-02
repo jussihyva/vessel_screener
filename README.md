@@ -57,6 +57,11 @@ Look [Makefile](/Makefile)
 
 `/scripts/seed_db.py`
 
+### :trophy: Deployment
+
+Every time when code is pushed to production branch, our [GitHub Actions](/.github/workflows/build.yml)
+will install dependencies, compiles binaries and uploads artifact.
+
 ### Created By
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
