@@ -1,0 +1,86 @@
+name: Continuous Delivery
+on:
+  push:
+    branches:
+      - production
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Compile & Copy
+    steps:
+
+    - name: Get source code
+      uses: actions/checkout@v2
+      with:
+        ref: "production"
+        submodules: true
+
+    - name: Make deploy directory
+      run: mkdir -p deploy
+
+    - name: Compile decoder
+      env:
+        GOPROXY: "https://proxy.golang.org"
+      run: cd decoder && make
+
+    - name: Copy decoder
+      run: cp decoder/aivdm deploy/
+
+    - name: Copy http server
+      run: cp -R server deploy/
+
+    - name: Set up Go ^1.14
+      uses: actions/setup-go@v2
+      env:
+        GOPROXY: "https://proxy.golang.org"
+      with:
+        go-version: ^1.14
+      id: go
+
+    - name: Build websocket server
+      env:
+        GOPROXY: "https://proxy.golang.org"
+      run: |
+        cd ws-server
+        go get ./...
+        go build -v -o ../deploy/vessel-server .
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: release
+        path: deploy/
+
+  # deploy:
+  #     runs-on: ubuntu-latest
+  #     name:  Deploy binary to Digital Ocean
+  #     needs: build
+  #     steps:
+
+  #     - name: Download uploaded binary
+  #       uses: actions/download-artifact@v1
+  #       with:
+  #         name: scoreboard
+
+  #     - name: Make executable
+  #       run: chmod +x scoreboard/run
+
+  #     - name: Transfer with SCP
+  #       uses: appleboy/scp-action@master
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USER }}
+  #         port: ${{ secrets.PORT }}
+  #         key: ${{ secrets.KEY }}
+  #         source: scoreboard
+  #         target: ${{ secrets.WORKDIR }}
+
+
+  #     - name: Example command via SSH
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.HOST }}
+  #         username: ${{ secrets.USER }}
+  #         key: ${{ secrets.KEY }}
+  #         port: ${{ secrets.PORT }}
+  #         script: "touch ${{ secrets.WORKDIR }}production"
