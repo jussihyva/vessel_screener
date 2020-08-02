@@ -49,11 +49,11 @@ Look [Makefile](/Makefile)
 
 ##### Scripts we have used
 
-Fetch data from an external API
+[Fetch](scripts/fetch.py) data from an external API
 
 `/scripts/fetch.py <url> > realtime.log`
 
-Seeding database with sample data and faking realtime data
+[Seed](scripts/seed_db.py) database with sample data and faking realtime data
 
 `/scripts/seed_db.py`
 
