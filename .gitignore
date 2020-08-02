@@ -10,3 +10,4 @@ __pycache__
 vessel-server
 node_modules
 *.dSYM
+*.swp
