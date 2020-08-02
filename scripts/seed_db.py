@@ -11,7 +11,7 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, 
 # Doesn't matter where script was started
 dir_path = os.path.dirname(os.path.realpath(__file__))
 DB_PATH = "sqlite:///" + os.path.join(dir_path, "../data.db")
-LOG_PATH = os.path.join(dir_path, "../assets/external_json_small.log")
+LOG_PATH = os.path.join(dir_path, "../assets/api-logs/small.log")
 
 engine = create_engine(DB_PATH, echo = True)
 meta = MetaData()
