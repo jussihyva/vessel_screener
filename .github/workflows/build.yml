@@ -29,7 +29,7 @@ jobs:
     - name: Copy http server
       run: cp -R server deploy/
 
-    - name: Set up Go 1.x
+    - name: Set up Go ^1.14
       uses: actions/setup-go@v2
       env:
         GOPROXY: "https://proxy.golang.org"
@@ -45,7 +45,7 @@ jobs:
     - name: Build websocket server
       env:
         GOPROXY: "https://proxy.golang.org"
-      run: go build -v -o ./deploy/vessel-server ws-server/main.go
+      run: go build -v -o ./deploy/vessel-server ws-server/*.go
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
