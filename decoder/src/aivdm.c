@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 07:44:22 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/02 15:48:08 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void		print_message_123(char *line, t_message_123 *message_123)
 		"rate_of_turn", "speed_over_ground", "position_accuracy", "longitude",
 		"latitude", "course_over_ground", "true_heading", "timestamp", 
 		"special_manoeuvre_indicator", "spare", "raim_flag",
-		"communication_state_1", "dummy_1\n");
+		"communication_state", "dummy\n");
 //	ft_printf("MMSI: %-9d,  Message: %x\n", message_123->mmsi, message_123->message_id);
 	ft_printf(" %8d", message_123->message_id);
 	ft_printf(" %8d", message_123->repeat_indicator);
@@ -37,8 +37,8 @@ static void		print_message_123(char *line, t_message_123 *message_123)
 	ft_printf(" %8d", message_123->special_manoeuvre_indicator);
 	ft_printf(" %8d", message_123->spare);
 	ft_printf(" %8d", message_123->raim_flag);
-	ft_printf(" %8d", message_123->communication_state_1);
-	ft_printf(" %8d\n", message_123->dummy_1);
+	ft_printf(" %8d", message_123->communication_state);
+	ft_printf(" %8d\n", message_123->dummy);
 	return ;
 }
 

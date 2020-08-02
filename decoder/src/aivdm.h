@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 07:17:26 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/02 15:39:17 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ typedef struct		s_message_123
 	int			special_manoeuvre_indicator;
 	int			spare;
 	int			raim_flag;
-	int			communication_state_1;
-	int			dummy_1;
+	int			communication_state;
+	int			dummy;
 }					t_message_123;
 
 void				ft_step_args(int *argc, char ***argv);
