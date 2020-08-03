@@ -6,7 +6,7 @@ import time
 import random
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, DateTime
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, DateTime, Float
 
 # Doesn't matter where script was started
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -23,6 +23,8 @@ messages = Table(
 	Column("id", Integer, primary_key = True),
 	Column("mmsi", Integer),
 	Column("name", String),
+	Column("lat", Float),
+	Column("lon", Float),
 	Column("timestamp", DateTime),
 )
 
@@ -31,12 +33,6 @@ conn = engine.connect()
 lines = (line.rstrip('\n') for line in open(LOG_PATH))
 
 # TODO: Make this faster
-# conn.execute(students.insert(), [
-#   {'name':'Rajiv', 'lastname' : 'Khanna'},
-#   {'name':'Komal','lastname' : 'Bhandari'},
-#   {'name':'Abdul','lastname' : 'Sattar'},
-#   {'name':'Priya','lastname' : 'Rajhans'},
-#])
 for line in lines:
 	if line == "":
 		continue
@@ -50,6 +46,8 @@ for line in lines:
 			timestamp = dtime,
 			mmsi = item["AIS"]["MMSI"],
 			name = item["AIS"]["NAME"],
+			lat = item["AIS"]["LATITUDE"],
+			lon = item["AIS"]["LONGITUDE"],
 		)
 		res = conn.execute(ins)
 		# Simulate real data
