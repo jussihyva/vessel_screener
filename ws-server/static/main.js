@@ -20,11 +20,19 @@ function render(container, data) {
 		const name = elem['name'];
 		const lat = elem['lat'];
 		const lon = elem['lon'];
-		console.log('Location', lat, lon);
 		const item = document.createElement('li');
-		item.innerHTML = name + ' ' + timestamp;
+		item.appendChild(createMapLink(name, lat, lon));
 		list.appendChild(item);
 	});
 	container.innerHTML = '';
 	container.appendChild(list);
+}
+
+function createMapLink(name, lat, lon) {
+	const a = document.createElement('a');
+	const text = document.createTextNode(name);
+	a.appendChild(text);
+	a.target = '_blank';
+	a.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+	return a;
 }
