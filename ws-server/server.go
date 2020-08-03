@@ -42,7 +42,7 @@ func (s *server) updateData() {
 
 	for range ticker.C {
 		since := time.Now().Add(-(timeAgo))
-		s.db.Where("timestamp > ?", since).Order("timestamp desc").Select("id, mmsi, name, timestamp").Find(&s.messages)
+		s.db.Where("timestamp > ?", since).Order("timestamp desc").Select("id, mmsi, name, lat, lon, timestamp").Find(&s.messages)
 		// Because response is same for every client we can create it here
 		s.createResponse()
 	}

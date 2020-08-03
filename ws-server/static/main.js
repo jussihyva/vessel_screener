@@ -18,6 +18,9 @@ function render(container, data) {
 	data.forEach(elem => {
 		const timestamp = elem['timestamp'];
 		const name = elem['name'];
+		const lat = elem['lat'];
+		const lon = elem['lon'];
+		console.log('Location', lat, lon);
 		const item = document.createElement('li');
 		item.innerHTML = name + ' ' + timestamp;
 		list.appendChild(item);

@@ -1,3 +1,7 @@
+html, body {
+	height: 100%;
+}
+
 #box-object {
 	background-color: #a1cda1;
 	width: 20px;
