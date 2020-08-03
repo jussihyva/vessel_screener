@@ -11,4 +11,6 @@ type Message struct {
 	Mmsi      int       `json:"mmsi"`
 	Timestamp time.Time `json:"timestamp"`
 	Name      string    `json:"name"`
+	Lat       float64   `json:"lat"`
+	Lon       float64   `json:"lon"`
 }
