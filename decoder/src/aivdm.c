@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtuomine <mtuomine@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:21:53 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/03 00:05:33 by mtuomine         ###   ########.fr       */
+/*   Updated: 2020/08/06 13:13:55 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
 
-static void		print_message_123(char *line, t_message_123 *message_123)
+void		print_message_123(char *line, t_message_123 *message_123)
 {
     struct tm	ts;
     char		buf[80];
@@ -229,7 +229,7 @@ int				main(int argc, char **argv)
 	while (ft_get_next_line(opt->fd, &line))
 	{
 		ais_dispatcher_timestamp = 0;
-		aivdm_record_array = parse_input_line(line, &ais_dispatcher_timestamp);
+		aivdm_record_array = parse_input_line(line, message_123);
 		if (ais_dispatcher_timestamp)
 			message_123->timestamp.ais_dispatcher = ais_dispatcher_timestamp;
 		if (aivdm_record_array && !validate_input_record(aivdm_record_array,
@@ -268,7 +268,7 @@ int				main(int argc, char **argv)
 						if (message_123->speed_over_ground >= 0)
 						{
 //							ft_printf("SOG: %.1f\n", message_123->speed_over_ground);
-							print_message_123(line, message_123);
+							insert_message_123(db, line, message_123);
 						}
 						count_mmsi_mid(statistics, message_123->mmsi, db, payload_max_length);
 					}
