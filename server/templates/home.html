@@ -2,8 +2,11 @@
 
 {% block content %}
 <div class="ui pointing inverted orange menu">
-	<a class="active item">
+	<a id="selected_tab_country" class="active item">
 		Countries
+	</a>
+	<a id="selected_tab_mmsi" class="item">
+		MMSI list
 	</a>
 </div>
 
@@ -14,13 +17,13 @@
 			<option value="900">Last 15 min</option>
 			<option value="3600">Last hour</option>
 			<option value="86400">Last day</option>
-			<option value="604800">Last week</option>
+			<option selected="selected" value="604800">Last week</option>
 		</select>
 	</div>
 </div>
 
 <div id="country_table">
-	{% include "table.html" %}
+	{% include "table_country.html" %}
 </div>
 
 <div class="ui segments">
