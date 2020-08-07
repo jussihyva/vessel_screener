@@ -37,34 +37,34 @@ def home(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    country_list = db.query(Country).all()
-    for country in country_list:
-        if country.country == "-":
-            country.country = country_name[country.mmsi_mid]
-            db.add(country)
-            db.commit()
-
+    country_list = []
     return templates.TemplateResponse("home.html",
     {
         "request": request,
         "country": country_list
     })
 
-@app.get("/table")
-def table(request: Request, db: Session = Depends(get_db)):
+@app.get("/table_country")
+def table_country(request: Request, db: Session = Depends(get_db)):
     """
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    timestamp = int(request.query_params["timestamp"])
-    country_list = db.query(Country).filter(Country.timestamp > int(timestamp))
-    for country in country_list:
-        if country.country == "-":
-            country.country = country_name[country.mmsi_mid]
-            db.add(country)
-            db.commit()
+    country_list = get_country_list(request, db)
+    return templates.TemplateResponse("table_country.html",
+    {
+        "request": request,
+        "country": country_list
+    })
 
-    return templates.TemplateResponse("table.html",
+@app.get("/table_mmsi")
+def table_mmsi(request: Request, db: Session = Depends(get_db)):
+    """
+    Displays country code of vessels in The Aura river at Turku.
+    """
+
+    country_list = get_country_list(request, db)
+    return templates.TemplateResponse("table_mmsi.html",
     {
         "request": request,
         "country": country_list
@@ -101,3 +101,13 @@ async def create_country(country_request: CountryRequest, backround_task: Backgr
         "code": "success",
         "message": "country created"
     }
+
+def get_country_list(request, db):
+    timestamp = int(request.query_params["timestamp"])
+    country_list = db.query(Country).filter(Country.timestamp > int(timestamp))
+    for country in country_list:
+        if country.country == "-":
+            country.country = country_name[country.mmsi_mid]
+            db.add(country)
+            db.commit()
+    return(country_list)

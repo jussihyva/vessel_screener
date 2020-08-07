@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_sqlite3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtuomine <mtuomine@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/15 10:34:34 by jkauppi           #+#    #+#             */
-/*   Updated: 2020/07/29 22:49:08 by mtuomine         ###   ########.fr       */
+/*   Updated: 2020/08/06 13:44:23 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "aivdm.h"
-#include <sys/time.h>
 
 # define DB_PATH "../server/country.db"
 
@@ -26,7 +25,7 @@ void			open_sqlite3(sqlite3 **db)
 	return ;
 }
 
-int		print_select_result(void *data, int argc, char **argv, char **column_name)
+int				print_select_result(void *data, int argc, char **argv, char **column_name)
 {
 	(void)argc;
 	(void)argv;
@@ -34,6 +33,45 @@ int		print_select_result(void *data, int argc, char **argv, char **column_name)
 	*(int *)data = 1;
 	return (0);
 }
+
+void			insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123)
+{
+	char		*sql_query_string;
+	char		*error_message;
+	int			error_code;
+
+	error_message = NULL;
+	print_message_123(line, message_123);
+	if (message_123->message_id >= 1 && message_123->message_id <= 3)
+	{
+		sql_query_string = (char *)ft_memalloc(sizeof(*sql_query_string) * 100000);
+		ft_sprintf(sql_query_string, "insert into message_%d (decoder_time, \
+			ais_dispatcher_time, message_id, repeat_indicator, mmsi, \
+			navigational_status, rate_of_turn, speed_over_ground, \
+			position_accuracy, longitude, latitude, course_over_ground, \
+			true_heading, timestamp, special_manoeuvre_indicator, spare, \
+			raim_flag, communication_state, dummy) values (%d, %d, %d, %d, %d, %d, %d, %f, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d%s",
+			message_123->message_id,
+			message_123->timestamp.decoder, message_123->timestamp.ais_dispatcher, 
+			message_123->message_id,
+			message_123->repeat_indicator, message_123->mmsi,
+			message_123->navigational_status, message_123->rate_of_turn,
+			message_123->speed_over_ground, message_123->position_accuracy,
+			message_123->longitude, message_123->latitude,
+			message_123->course_over_ground, message_123->true_heading,
+			message_123->timestamp.vessel, message_123->special_manoeuvre_indicator,
+			message_123->spare, message_123->raim_flag,
+			message_123->communication_state, message_123->dummy, ")");
+		if ((error_code = sqlite3_exec(db, sql_query_string, print_select_result, NULL, &error_message)))
+		{
+			;
+		}
+		ft_printf("%s\n", sql_query_string);
+		ft_strdel(&sql_query_string);
+	}
+	return ;
+}
+
 void			select_sqlite3(sqlite3 *db, int mmsi_mid)
 {
 	char			*sql_query_string;

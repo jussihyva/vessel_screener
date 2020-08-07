@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   aivdm.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ubuntu <ubuntu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: jkauppi <jkauppi@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/07/05 21:23:42 by ubuntu            #+#    #+#             */
-/*   Updated: 2020/08/02 22:50:59 by ubuntu           ###   ########.fr       */
+/*   Updated: 2020/08/06 13:24:21 by jkauppi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <fcntl.h>
 #include <sqlite3.h>
 #include <time.h>
+#include <sys/time.h>
 
 # define PRINT_OK 500
 # define NUM_OF_FIELDS 7
@@ -106,6 +107,8 @@ void				parse_message_123(char *ais_data, t_message_123 *message_123);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
 void				select_sqlite3(sqlite3 *db, int mmsi_mid);
-char				**parse_input_line(char *line, int *ais_dispatcher_timestamp);
+char				**parse_input_line(char *line, t_message_123 *message_123);
+void				print_message_123(char *line, t_message_123 *message_123);
+void				insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123);
 
 #endif
