@@ -1,12 +1,13 @@
 
 const useSocket = false;
 
+let current_page = null;
 let	myInterval = null;
 let timeFilterSec = 15 * 60;
 const refreshInterval = 3000;
 const timeFilter = document.getElementById("time_period");
-const selectedTabCountry = document.getElementById("selected_tab_country");
-const selectedTabMmsi = document.getElementById("selected_tab_mmsi");
+let selectedTabCountry = document.getElementById("selected_tab_country");
+let selectedTabMmsi = document.getElementById("selected_tab_mmsi");
 const countryTable = document.getElementById("country_table");
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -33,13 +34,32 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
+$(document).ready(function() {
+	$('.ui.pointing.inverted.orange.menu')
+    .on('click', '.item', function() {
+      if(!$(this).hasClass('dropdown')) {
+        $(this)
+          .addClass('active')
+          .siblings('.item')
+            .removeClass('active');
+      }
+    });
+});
+
 function timeFilterChanged() {
 	timeFilterSec = timeFilter.value;
-	console.log('value changed', timeFilterSec);
-	updatePage_Country();
+	if (current_page == 1)
+	{
+		updatePage_Country();
+	}
+	else
+	{
+		updatePage_MMSI();
+	}
 }
 
 function updatePage_Country() {
+	current_page = 1;
 	const timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
 	fetch('/table_country?timestamp='+ timestamp)
 	.then((res) => {
@@ -51,6 +71,7 @@ function updatePage_Country() {
 }
 
 function updatePage_MMSI() {
+	current_page = 2;
 	const timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
 	fetch('/table_mmsi?timestamp='+ timestamp)
 	.then((res) => {
@@ -63,7 +84,6 @@ function updatePage_MMSI() {
 
 function openCountries()
 {
-	console.log("openCountries");
 	countryTable.innerHTML = "";
 	updatePage_Country();
 	if (myInterval != null)
@@ -80,7 +100,6 @@ function openMMSI_List()
 		clearInterval(myInterval);
 		myInterval = null;
 	}
+	updatePage_MMSI();
 	myInterval = setInterval(updatePage_MMSI, refreshInterval);
-	console.log("openMMSI_List");
-	countryTable.innerHTML = "POO";
 }
