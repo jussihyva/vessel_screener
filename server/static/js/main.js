@@ -1,3 +1,4 @@
+import { updatePage_Country } from './modules/main_country.js';
 
 const useSocket = false;
 
@@ -15,7 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	if (!useSocket)
 	{
 		timeFilterChanged();
-		myInterval = setInterval(updatePage_Country, refreshInterval);
+		myInterval = setInterval(updatePage_Country(countryTable, timeFilterSec), refreshInterval);
 		timeFilter.onchange = timeFilterChanged;
 		selectedTabCountry.onclick = openCountries;
 		selectedTabMmsi.onclick = openMMSI_List;
@@ -50,7 +51,7 @@ function timeFilterChanged() {
 	timeFilterSec = timeFilter.value;
 	if (current_page == 1)
 	{
-		updatePage_Country();
+		updatePage_Country(countryTable, timeFilterSec);
 	}
 	else
 	{
@@ -58,21 +59,8 @@ function timeFilterChanged() {
 	}
 }
 
-function updatePage_Country() {
-	current_page = 1;
-	const timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
-	fetch('/table_country?timestamp='+ timestamp)
-	.then((res) => {
-		return res.text()
-	})
-	.then((text) => {
-		countryTable.innerHTML = text;
-	})
-}
-
 function updatePage_MMSI() {
-	current_page = 2;
-	const timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
+	let timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
 	fetch('/table_mmsi?timestamp='+ timestamp)
 	.then((res) => {
 		return res.text()
@@ -82,24 +70,29 @@ function updatePage_MMSI() {
 	})
 }
 
-function openCountries()
-{
-	countryTable.innerHTML = "";
-	updatePage_Country();
-	if (myInterval != null)
-	{
-		clearInterval(myInterval);
-		myInterval = null;
-	}
-	myInterval = setInterval(updatePage_Country, refreshInterval);
-}
 function openMMSI_List()
 {
+	console.log("Open MMSI:" + current_page);
+	current_page = 2;
+	updatePage_MMSI();
 	if (myInterval != null)
 	{
 		clearInterval(myInterval);
 		myInterval = null;
 	}
-	updatePage_MMSI();
 	myInterval = setInterval(updatePage_MMSI, refreshInterval);
+}
+
+function openCountries()
+{
+	console.log("Open Country:" + current_page);
+	countryTable.innerHTML = "";
+	current_page = 1;
+	updatePage_Country(countryTable, timeFilterSec);
+	if (myInterval != null)
+	{
+		clearInterval(myInterval);
+		myInterval = null;
+	}
+	myInterval = setInterval(updatePage_Country(countryTable, timeFilterSec), refreshInterval);
 }
