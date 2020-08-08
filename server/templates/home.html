@@ -1,15 +1,12 @@
 {%extends "layout.html" %}
 
 {% block content %}
-<div class="ui pointing inverted orange menu">
-	<a id="selected_tab_country" class="active item">
-		Countries
-	</a>
-	<a id="selected_tab_mmsi" class="item">
-		MMSI list
-	</a>
+<div>
+	<div class="ui pointing inverted orange menu">
+		<a id="selected_tab_country" class="active item">Countries</a>
+		<a id="selected_tab_mmsi" class="item">MMSI list</a>
+	</div>
 </div>
-
 <div style="border-style: hidden;" class="ui segments">
 	<div class="ui segment">
 		<label style="font-weight: bold;">Select time period:</label>
@@ -21,7 +18,6 @@
 		</select>
 	</div>
 </div>
-
 <div id="country_table">
 	{% include "table_country.html" %}
 </div>
