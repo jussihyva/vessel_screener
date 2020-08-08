@@ -3,5 +3,10 @@
 		{
 			"path": ".."
 		}
-	]
+	],
+	"settings": {
+		"jshint.options": {
+		"esversion": 6
+		}
+	}
 }
