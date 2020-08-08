@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "> Includes AIVDM Decoder, Server & Web UI",
   "main": "static/js/main.js",
+  "type": "module",
   "directories": {
     "lib": "lib",
     "test": "test"
