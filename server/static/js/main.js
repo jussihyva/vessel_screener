@@ -1,8 +1,9 @@
-import { updatePage_Country } from './modules/main_country.js';
+import { openCountries, updatePage_Country } from './main_country.js';
+import { openMMSI_List, updatePage_MMSI } from './main_mmsi.js';
 
 const useSocket = false;
 
-let current_page = null;
+let current_page = 1;
 let	myInterval = null;
 let timeFilterSec = 15 * 60;
 const refreshInterval = 3000;
@@ -18,8 +19,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		timeFilterChanged();
 		myInterval = setInterval(updatePage_Country(countryTable, timeFilterSec), refreshInterval);
 		timeFilter.onchange = timeFilterChanged;
-		selectedTabCountry.onclick = openCountries;
-		selectedTabMmsi.onclick = openMMSI_List;
+		selectedTabCountry.onclick = function() {current_page = openCountries(countryTable, myInterval, timeFilterSec);};
+		selectedTabMmsi.onclick = function() {current_page = openMMSI_List(countryTable, myInterval, timeFilterSec);};
 		return ;
 	}
 
@@ -49,50 +50,13 @@ $(document).ready(function() {
 
 function timeFilterChanged() {
 	timeFilterSec = timeFilter.value;
+	console.log(current_page);
 	if (current_page == 1)
 	{
 		updatePage_Country(countryTable, timeFilterSec);
 	}
 	else
 	{
-		updatePage_MMSI();
+		updatePage_MMSI(countryTable, timeFilterSec);
 	}
-}
-
-function updatePage_MMSI() {
-	let timestamp = parseInt((Date.now() / 1000) - timeFilterSec, 10);
-	fetch('/table_mmsi?timestamp='+ timestamp)
-	.then((res) => {
-		return res.text()
-	})
-	.then((text) => {
-		countryTable.innerHTML = text;
-	})
-}
-
-function openMMSI_List()
-{
-	console.log("Open MMSI:" + current_page);
-	current_page = 2;
-	updatePage_MMSI();
-	if (myInterval != null)
-	{
-		clearInterval(myInterval);
-		myInterval = null;
-	}
-	myInterval = setInterval(updatePage_MMSI, refreshInterval);
-}
-
-function openCountries()
-{
-	console.log("Open Country:" + current_page);
-	countryTable.innerHTML = "";
-	current_page = 1;
-	updatePage_Country(countryTable, timeFilterSec);
-	if (myInterval != null)
-	{
-		clearInterval(myInterval);
-		myInterval = null;
-	}
-	myInterval = setInterval(updatePage_Country(countryTable, timeFilterSec), refreshInterval);
 }
