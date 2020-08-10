@@ -49,12 +49,8 @@ def table_country(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    country_list = get_country_list(request, db)
-    return templates.TemplateResponse("table_country.html",
-    {
-        "request": request,
-        "country": country_list
-    })
+    response = get_country_list(request, db)
+    return(response)
 
 @app.get("/table_mmsi")
 def table_mmsi(request: Request, db: Session = Depends(get_db)):
@@ -62,9 +58,5 @@ def table_mmsi(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    country_list = get_mmsi_list(request, db)
-    return templates.TemplateResponse("table_mmsi.html",
-    {
-        "request": request,
-        "country": country_list
-    })
+    response = get_mmsi_list(request, db)
+    return(response)
