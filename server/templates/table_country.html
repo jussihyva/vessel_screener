@@ -6,15 +6,15 @@
 		<tr>
 			<th><a style="color: white;" href="https://en.wikipedia.org/wiki/Maritime_identification_digits" target="_blank">MID code (MMSI)</a></th>
 			<th>Country</th>
-			<th>Comments</th>
+			<th>Number of vessels</th>
 		</tr>
 	</thead>
 	<tbody>
-		{% for c in country %}
+		{% for country in country_data_list %}
 		<tr>
-			<td>{{ c.mid }}</td>
-			<td>{{ c.country }}</td>
-			<td>{{ c.num_of_mmsi }}</td>
+			<td>{{ country.mid }}</td>
+			<td>{{ country.country_name }}</td>
+			<td>{{ country.num_of_mmsi }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
