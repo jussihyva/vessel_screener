@@ -14,7 +14,7 @@
 			<option value="900">Last 15 min</option>
 			<option value="3600">Last hour</option>
 			<option value="86400">Last day</option>
-			<option selected="selected" value="604800">Last week</option>
+			<option selected="selected" value="604800">Last 7 days</option>
 		</select>
 	</div>
 </div>
@@ -32,15 +32,18 @@
 		</div>
 	</div>
 	<div class="ui horizontal segments">
-		<div class="ui inverted green segment">
-			<!--			<p>Messages in last 15 min.: N/A</p> -->
+		<div style="text-align: center;" class="ui inverted green segment">
+			<p>Message 1</p>
 		</div>
-		<div class="ui inverted green segment">
-			<!--			<p>Messages in last hour: N/A</p> -->
+		<div style="text-align: center;" class="ui inverted green segment">
+			<p>Message 2</p>
 		</div>
-		<div class="ui inverted green segment">
-			<!--			<p>Messages in last 24 hours: N/A</p> -->
+		<div style="text-align: center;" class="ui inverted green segment">
+			<p>Message 3</p>
 		</div>
+			</div>
+	<div id="message_statistics_table" class="ui horizontal segments">
+		{% include "table_message_statistics.html" %}
 	</div>
 </div>
 {% endblock %}
