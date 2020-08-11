@@ -37,10 +37,12 @@ def home(request: Request, db: Session = Depends(get_db)):
     """
 
     country_list = []
+    statistic = Statistic(message_1 = 0, message_2 = 0, message_3 = 0)
     return templates.TemplateResponse("home.html",
     {
         "request": request,
-        "country": country_list
+        "country": country_list,
+        "statistic": statistic
     })
 
 @app.get("/table_country")
@@ -50,6 +52,15 @@ def table_country(request: Request, db: Session = Depends(get_db)):
     """
 
     response = get_country_table(request, db)
+    return(response)
+
+@app.get("/table_message_statistics")
+def table_country(request: Request, db: Session = Depends(get_db)):
+    """
+    Displays country code of vessels in The Aura river at Turku.
+    """
+
+    response = get_message_statistics_table(request, db)
     return(response)
 
 @app.get("/table_mmsi")
