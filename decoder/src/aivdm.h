@@ -81,6 +81,7 @@ typedef struct		s_message_123
 	int				message_id;
 	int				repeat_indicator;
 	int				mmsi;
+	int				mid;
 	int				navigational_status;
 	int				rate_of_turn;
 	double			speed_over_ground;
