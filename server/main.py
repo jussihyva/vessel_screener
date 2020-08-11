@@ -49,7 +49,7 @@ def table_country(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    response = get_country_list(request, db)
+    response = get_country_table(request, db)
     return(response)
 
 @app.get("/table_mmsi")
@@ -58,5 +58,5 @@ def table_mmsi(request: Request, db: Session = Depends(get_db)):
     Displays country code of vessels in The Aura river at Turku.
     """
 
-    response = get_mmsi_list(request, db)
+    response = get_mmsi_table(request, db)
     return(response)
