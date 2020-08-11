@@ -57,6 +57,9 @@ void	parse_message_123(char *ais_data, t_message_123 *message_123)
 	message_123->communication_state += (size_t)record_123->communication_state_1 << 1;
 	message_123->communication_state += (size_t)record_123->communication_state_0;
 	message_123->dummy = (int)record_123->dummy;
+	message_123->mid = message_123->mmsi;
+	while (message_123->mid >= 1000)
+		message_123->mid /= 10;
 	free(record_123);
 	return ;
 }

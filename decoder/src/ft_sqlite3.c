@@ -46,15 +46,15 @@ void			insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123)
 	{
 		sql_query_string = (char *)ft_memalloc(sizeof(*sql_query_string) * 100000);
 		ft_sprintf(sql_query_string, "insert into message_%d (decoder_time, \
-			ais_dispatcher_time, message_id, repeat_indicator, mmsi, \
+			ais_dispatcher_time, message_id, repeat_indicator, mmsi, mid, \
 			navigational_status, rate_of_turn, speed_over_ground, \
 			position_accuracy, longitude, latitude, course_over_ground, \
 			true_heading, timestamp, special_manoeuvre_indicator, spare, \
-			raim_flag, communication_state, dummy) values (%d, %d, %d, %d, %d, %d, %d, %f, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d%s",
+			raim_flag, communication_state, dummy) values (%d, %d, %d, %d, %d, %d, %d, %d, %f, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d%s",
 			message_123->message_id,
 			message_123->timestamp.decoder, message_123->timestamp.ais_dispatcher, 
 			message_123->message_id,
-			message_123->repeat_indicator, message_123->mmsi,
+			message_123->repeat_indicator, message_123->mmsi, message_123->mid,
 			message_123->navigational_status, message_123->rate_of_turn,
 			message_123->speed_over_ground, message_123->position_accuracy,
 			message_123->longitude, message_123->latitude,
