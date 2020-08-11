@@ -11,18 +11,14 @@ class Country_data(BaseModel):
     num_of_mmsi: int
     country_name: str
 
+class Statistic(BaseModel):
+    message_1: int
+    message_2: int
+    message_3: int
+
 def get_country_table(request, db):
     country_data_list : Country_data = []
     timestamp = int(request.query_params["timestamp"])
-    num_of_message_1 = db.query(func.count(Message_1.mmsi)).filter(Message_1.ais_dispatcher_time > \
-        int(timestamp))[0][0]
-    num_of_message_2 = db.query(func.count(Message_2.mmsi)).filter(Message_2.ais_dispatcher_time > \
-        int(timestamp))[0][0]
-    num_of_message_3 = db.query(func.count(Message_3.mmsi)).filter(Message_3.ais_dispatcher_time > \
-        int(timestamp))[0][0]
-    print(num_of_message_1)
-    print(num_of_message_2)
-    print(num_of_message_3)
     message_3_list = db.query(Message_3.mid, \
         func.count(distinct(Message_3.mmsi))).filter(Message_3.ais_dispatcher_time > \
         int(timestamp)).group_by(Message_3.mid)
@@ -34,4 +30,19 @@ def get_country_table(request, db):
     {
         "request": request,
         "country_data_list": country_data_list
+    })
+
+def get_message_statistics_table(request, db):
+    timestamp = int(request.query_params["timestamp"])
+    num_of_message_1 = db.query(func.count(Message_1.mmsi)).filter(Message_1.ais_dispatcher_time > \
+        int(timestamp))[0][0]
+    num_of_message_2 = db.query(func.count(Message_2.mmsi)).filter(Message_2.ais_dispatcher_time > \
+        int(timestamp))[0][0]
+    num_of_message_3 = db.query(func.count(Message_3.mmsi)).filter(Message_3.ais_dispatcher_time > \
+        int(timestamp))[0][0]
+    statistic = Statistic(message_1 = num_of_message_1, message_2 = num_of_message_2, message_3 = num_of_message_3)
+    return templates.TemplateResponse("table_message_statistics.html",
+    {
+        "request": request,
+        "statistic": statistic
     })
