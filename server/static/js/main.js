@@ -6,21 +6,22 @@ const useSocket = false;
 let current_page = 1;
 let	myInterval = null;
 let timeFilterSec = 15 * 60;
-const refreshInterval = 3000;
+const refreshInterval = 5000;
 const timeFilter = document.getElementById("time_period");
 let selectedTabCountry = document.getElementById("selected_tab_country");
 let selectedTabMmsi = document.getElementById("selected_tab_mmsi");
 const countryTable = document.getElementById("country_table");
+const messageStatisticsTable = document.getElementById("message_statistics_table");
 
 window.addEventListener('DOMContentLoaded', () => {
 
 	if (!useSocket)
 	{
 		timeFilterChanged();
-		myInterval = setInterval(updatePage_Country(countryTable, timeFilterSec), refreshInterval);
+		myInterval = setInterval(function() {updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);}, refreshInterval);
 		timeFilter.onchange = timeFilterChanged;
-		selectedTabCountry.onclick = function() {current_page = openCountries(countryTable, myInterval, timeFilterSec);};
-		selectedTabMmsi.onclick = function() {current_page = openMMSI_List(countryTable, myInterval, timeFilterSec);};
+		selectedTabCountry.onclick = function() {current_page = openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
+		selectedTabMmsi.onclick = function() {current_page = openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
 		return ;
 	}
 
@@ -53,10 +54,10 @@ function timeFilterChanged() {
 	console.log(current_page);
 	if (current_page == 1)
 	{
-		updatePage_Country(countryTable, timeFilterSec);
+		updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);
 	}
 	else
 	{
-		updatePage_MMSI(countryTable, timeFilterSec);
+		updatePage_MMSI(countryTable, messageStatisticsTable, timeFilterSec);
 	}
 }
