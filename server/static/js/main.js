@@ -20,8 +20,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		timeFilterChanged();
 		myInterval = setInterval(function() {updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);}, refreshInterval);
 		timeFilter.onchange = timeFilterChanged;
-		selectedTabCountry.onclick = function() {current_page = openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
-		selectedTabMmsi.onclick = function() {current_page = openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
+		selectedTabCountry.onclick = function() {[current_page, myInterval] = openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
+		selectedTabMmsi.onclick = function() {[current_page, myInterval] = openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
 		return ;
 	}
 
