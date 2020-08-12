@@ -8,3 +8,15 @@ a:hover {
 	color: #fff;
 	text-decoration: underline;
 }
+
+.bold {
+	font-weight: bold;
+}
+
+.tac {
+	text-align: center;
+}
+
+.tar {
+	text-align: right;
+}
