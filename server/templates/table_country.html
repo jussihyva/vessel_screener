@@ -1,21 +1,28 @@
-<table class="ui celled inverted blue table">
+<table class="ui celled structured table">
 	<thead>
-		<tr style="text-align: center;" ><th colspan="3">
+		<tr style="text-align: center;" ><th colspan="5">
 			Vessels (with AIS sender) in Turku harbour area.
 		</th>
-		<tr>
-			<th><a class="header-link" href="https://en.wikipedia.org/wiki/Maritime_identification_digits" target="_blank">MID code (MMSI)</a></th>
-			<th>Country</th>
-			<th>Number of vessels</th>
-		</tr>
+	  <tr>
+		<th class="center aligned" rowspan="2" class="header-link" href="https://en.wikipedia.org/wiki/Maritime_identification_digits" target="_blank">MID code (MMSI)</a></th>
+		<th class="center aligned" rowspan="2">Country</th>
+		<th class="center aligned" rowspan="2">Number of vessels</th>
+		<th class="center aligned" colspan="2">AIS messages</th>
+	  </tr>
+	  <tr>
+		<th class="center aligned">1</th>
+		<th class="center aligned">3</th>
+	  </tr>
 	</thead>
 	<tbody>
 		{% for country in country_data_list %}
 		<tr>
-			<td>{{ country.mid }}</td>
-			<td>{{ country.country_name }}</td>
-			<td>{{ country.num_of_mmsi }}</td>
+			<td class="center aligned">{{ country.mid }}</td>
+			<td class="center aligned">{{ country.country_name }}</td>
+			<td class="center aligned">{{ country.num_of_mmsi }}</td>
+			<td class="center aligned"></td>
+			<td class="center aligned"></td>
 		</tr>
 		{% endfor %}
 	</tbody>
-</table>
+  </table>
