@@ -12,7 +12,7 @@ function openCountries(countryTable, messageStatisticsTable, myInterval, timeFil
 	}
 	myInterval = setInterval(function() {updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);}, refreshInterval);
 	current_page = 1;
-	return(current_page);
+	return([current_page, myInterval]);
 }
 
 function updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec) {

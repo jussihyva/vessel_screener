@@ -13,7 +13,7 @@ function openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFil
 	}
 	myInterval = setInterval(function() {updatePage_MMSI(countryTable, messageStatisticsTable, timeFilterSec);}, refreshInterval);
 	current_page = 2;
-	return(current_page);
+	return([current_page, myInterval]);
 }
 
 function updatePage_MMSI(countryTable, messageStatisticsTable, timeFilterSec) {
