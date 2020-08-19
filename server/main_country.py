@@ -10,6 +10,8 @@ class Country_data(BaseModel):
     mid: int
     num_of_mmsi: int
     country_name: str
+    num_of_message_1: int
+    num_of_message_3: int
 
 class Statistic(BaseModel):
     message_1: int
@@ -18,12 +20,24 @@ class Statistic(BaseModel):
 
 def get_country_table(request, db):
     country_data_list : Country_data = []
+    message_1_table = {}
     timestamp = int(request.query_params["timestamp"])
-    message_3_list = db.query(Message_3.mid, \
-        func.count(distinct(Message_3.mmsi))).filter(Message_3.ais_dispatcher_time > \
+    message_1_list = db.query(Message_1.mid, func.count(distinct(Message_1.mmsi)), \
+        func.count(Message_1.mmsi)).filter(Message_1.ais_dispatcher_time > \
+        int(timestamp)).group_by(Message_1.mid)
+    for message in message_1_list:
+        message_1_table[message.mid] = message[2]
+    message_3_list = db.query(Message_3.mid, func.count(distinct(Message_3.mmsi)), \
+        func.count(Message_3.mmsi)).filter(Message_3.ais_dispatcher_time > \
         int(timestamp)).group_by(Message_3.mid)
     for message in message_3_list:
+        if message.mid in message_1_table:
+            num_of_message_1 = message_1_table[message.mid]
+        else:
+            num_of_message_1 = 0
         country_data = Country_data(mid = message.mid, num_of_mmsi = message[1], \
+                        num_of_message_1 = num_of_message_1, \
+                        num_of_message_3 = message[2], \
                         country_name = country_name_list[message.mid])
         country_data_list.append(country_data)
     return templates.TemplateResponse("table_country.html",

@@ -51,13 +51,12 @@ $(document).ready(function() {
 
 function timeFilterChanged() {
 	timeFilterSec = timeFilter.value;
-	console.log(current_page);
 	if (current_page == 1)
 	{
-		updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);
+		openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);
 	}
 	else
 	{
-		updatePage_MMSI(countryTable, messageStatisticsTable, timeFilterSec);
+		openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);
 	}
 }
