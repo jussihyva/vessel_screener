@@ -1,10 +1,9 @@
-import { openCountries, updatePage_Country } from './main_country.js';
-import { openMMSI_List, updatePage_MMSI } from './main_mmsi.js';
+import { updatePage_Country } from './main_country.js';
+import { updatePage_MMSI } from './main_mmsi.js';
 
 const useSocket = false;
 
 let current_page = 1;
-let	myInterval = null;
 let timeFilterSec = 15 * 60;
 const refreshInterval = 5000;
 const timeFilter = document.getElementById("time_period");
@@ -18,10 +17,17 @@ window.addEventListener('DOMContentLoaded', () => {
 	if (!useSocket)
 	{
 		timeFilterChanged();
-		myInterval = setInterval(function() {updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);}, refreshInterval);
 		timeFilter.onchange = timeFilterChanged;
-		selectedTabCountry.onclick = function() {[current_page, myInterval] = openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
-		selectedTabMmsi.onclick = function() {[current_page, myInterval] = openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);};
+		selectedTabCountry.onclick = function()
+		{
+			current_page = 1;
+			openCountries(countryTable, messageStatisticsTable, timeFilterSec);
+		};
+		selectedTabMmsi.onclick = function()
+		{
+			current_page = 2;
+			openMMSI_List(countryTable, messageStatisticsTable, timeFilterSec);
+		};
 		return ;
 	}
 
@@ -53,10 +59,36 @@ function timeFilterChanged() {
 	timeFilterSec = timeFilter.value;
 	if (current_page == 1)
 	{
-		openCountries(countryTable, messageStatisticsTable, myInterval, timeFilterSec);
+		openCountries(countryTable, messageStatisticsTable);
 	}
 	else
 	{
-		openMMSI_List(countryTable, messageStatisticsTable, myInterval, timeFilterSec);
+		openMMSI_List(countryTable, messageStatisticsTable);
 	}
+}
+
+function openCountries(countryTable, messageStatisticsTable)
+{
+	if (current_page == 1)
+	{
+		updatePage_Country(countryTable, messageStatisticsTable, timeFilterSec);
+		setTimeout(function()
+		{
+			openCountries(countryTable, messageStatisticsTable);
+		}, refreshInterval);
+	}
+	return ;
+}
+
+function openMMSI_List(countryTable, messageStatisticsTable)
+{
+	if (current_page == 2)
+	{
+		updatePage_MMSI(countryTable, messageStatisticsTable, timeFilterSec);
+		setTimeout(function()
+		{
+			openMMSI_List(countryTable, messageStatisticsTable);
+		}, refreshInterval);
+	}
+	return ;
 }
