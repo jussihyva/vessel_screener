@@ -45,6 +45,6 @@ $(OBJ_FOLDER):
 	@mkdir $(OBJ_FOLDER)
 
 make_lib:
-	@make -C ${LIB_FOLDER} 1>/dev/null
+	@make -C ${LIB_FOLDER}
 
 .PHONY: all make_lib

@@ -10,43 +10,32 @@
 #                                                                              #
 # **************************************************************************** #
 
-LOG					=	~/aivdm_decoder_lib_make.log
-LIBFT_H				=	libft.h
-FT_PRINTF_H			=	ft_printf.h
-LIBFT_A				=	libft.a
-FT_PRINTF_A			=	libftprintf.a
+LIB_FILES			=	libft.a libjk.a
+H_FILES				=	$(patsubst %.a, %.h, $(LIB_FILES))
+LIB_FOLDERS			=	$(patsubst %.a, %, $(LIB_FILES))
 
-LIBFT_FOLDER		=	./libft
-FT_PRINTF_FOLDER	=	./ft_printf/src
+all: $(LIB_FOLDERS) make_libraries
 
-all: rm_log libft ft_printf headers archives
+$(LIB_FOLDERS):
+	mkdir $@
 
-headers: $(LIBFT_H) $(FT_PRINTF_H)
+make_libraries:
+	for folder in $(LIB_FOLDERS) ; do \
+		make -C $$folder ; \
+	done
 
-$(LIBFT_H): $(LIBFT_FOLDER)/$(LIBFT_H)
-	cp $(LIBFT_FOLDER)/$(LIBFT_H) ./ | tee $(LOG)
+clean:
+	for folder in $(LIB_FOLDERS) ; do \
+		make -C $$folder clean ; \
+	done
 
-$(FT_PRINTF_H): $(FT_PRINTF_FOLDER)/$(FT_PRINTF_H)
-	cp $(FT_PRINTF_FOLDER)/$(FT_PRINTF_H) ./ | tee $(LOG)
+fclean:
+	rm -f $(H_FILES)
+	rm -f $(LIB_FILES)
+	for folder in $(LIB_FOLDERS) ; do \
+		make -C $$folder fclean ; \
+	done
 
-archives: $(LIBFT_A) $(FT_PRINTF_A)
+re: fclean all
 
-$(LIBFT_A): $(LIBFT_FOLDER)/$(LIBFT_A)
-	cp $(LIBFT_FOLDER)/$(LIBFT_A) ./ | tee $(LOG)
-
-$(FT_PRINTF_A): $(FT_PRINTF_FOLDER)/../$(FT_PRINTF_A)
-	cp $(FT_PRINTF_FOLDER)/../$(FT_PRINTF_A) ./ | tee $(LOG)
-
-libft:
-	@make -C ${LIBFT_FOLDER} >> $(LOG)
-
-ft_printf:
-	@make -C ${FT_PRINTF_FOLDER}/.. >> $(LOG)
-
-rm_log:
-	@\rm -f $(LOG)
-
-log: all
-	@cat $(LOG)
-
-.PHONY: all libft ft_printf headers arcaives rm_log log
+.PHONY: all clean fclean re make_libraries
