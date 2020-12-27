@@ -13,17 +13,49 @@
 #ifndef AIVDM_H
 # define AIVDM_H
 # include "libft.h"
+# include "libjk.h"
 # include "ft_printf.h"
+# include <stdio.h>
+# include <time.h>
 # include "errno.h"
 # include <fcntl.h>
-#include <sqlite3.h>
-#include <time.h>
-#include <sys/time.h>
+# include <sqlite3.h>
+# include <time.h>
+# include <sys/time.h>
 
 # define PRINT_OK 500
 # define NUM_OF_FIELDS 7
 # define MAX_NUM_OF_MESSAGE_TYPES 50
 # define COUNTRIES 1000
+# define PEM_CERT_FILE			"/home/ubuntu/.ssh/enclave_certificate.pem"
+# define PEM_PRIVTE_KEY_FILE	"/home/ubuntu/.ssh/enclave_key.pem"
+# define BUF_MAX_SIZE			8192
+# define MESSAGE_BUF_SIZE		BUF_MAX_SIZE + 4096
+# define USERNAME "matti"
+# define PASSWORD "Simo"
+
+typedef struct 						s_timeval
+{
+	__kernel_time_t			tv_sec;
+	__kernel_suseconds_t	tv_usec;
+}									t_timeval;
+
+typedef enum					e_connection_status
+{
+	e_idle,
+	e_waiting_msg0,
+	e_waiting_msg1,
+	e_waiting_msg2,
+	e_waiting_msg3,
+	e_waiting_msg4,
+	e_send_msg0
+}								t_connection_status;
+
+typedef struct					s_tls_session
+{
+	void					*connection;
+	t_connection_status		connection_status;
+}								t_tls_session;
 
 typedef enum		e_flags
 {
@@ -110,6 +142,10 @@ void				close_sqlite3(sqlite3 *db);
 void				select_sqlite3(sqlite3 *db, int mmsi_mid);
 char				**parse_input_line(char *line, t_message_123 *message_123);
 void				print_message_123(char *line, t_message_123 *message_123);
-void				insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123);
+void				insert_message_123(sqlite3 *db, char *line,
+													t_message_123 *message_123);
+t_tls_session		*setup_influxdb_connection(char *host_name, char *port_number);
+void				write_influxdb(t_tls_connection *tls_connection,
+													char *body, char *database);
 
 #endif

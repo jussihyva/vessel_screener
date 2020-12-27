@@ -214,8 +214,11 @@ int				main(int argc, char **argv)
 	sqlite3			*db;
 	int				payload_max_length;
 	int				ais_dispatcher_timestamp;
+	char			body[BUF_MAX_SIZE];
+	t_tls_session	*tls_session;
 
 	ft_step_args(&argc, &argv);
+	tls_session = setup_influxdb_connection("127.0.0.1", "8086");
 	open_sqlite3(&db);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
 	ft_read_opt(opt, &argc, &argv);
@@ -271,6 +274,10 @@ int				main(int argc, char **argv)
 							insert_message_123(db, line, message_123);
 						}
 						count_mmsi_mid(statistics, message_123->mmsi, db, payload_max_length);
+						sprintf(body, "noise,host=%s random=%.3f   \n", "blue",
+												((double)(random())/1000.0));
+						write_influxdb(tls_session->connection, body, "Test_01");
+						usleep(4000 * 1000);
 					}
 				}
 				ft_strdel(&payload_string);

@@ -1,5 +1,6 @@
 NAME				=	libjk.a
 LIB_FOLDER			=	..
+CFLAGS				=	-g -Wall -Werror -Wextra
 AR_FILE				=	$(LIB_FOLDER)/$(NAME)
 SRC					=	src
 OBJ					=	obj
@@ -8,7 +9,7 @@ INCLUDES			=	-I $(INCLUDE) -I $(LIB_FOLDER)
 FOLDERS				=	$(SRC) $(OBJ) $(INCLUDE)
 
 SRC_FILES			=	jk_start_tls_client.c jk_setup_tls_connection.c \
-						jk_create_ctx.c
+						jk_create_ctx.c jk_init_openssl.c
 H_FILES				=	libjk.h
 HEADERS				=	$(addprefix $(INCLUDE)/, $(H_FILES))
 LN_HEADERS			=	$(addprefix $(LIB_FOLDER)/, $(H_FILES))
@@ -28,7 +29,7 @@ $(LN_HEADERS): $(LIB_FOLDER)/%: $(INCLUDE)/%
 	ln -s -r -t $(LIB_FOLDER) $<
 
 $(OBJECTS): $(OBJ)/%.o: $(SRC)/%.c $(HEADERS) Makefile
-	$(CC) $(TRUSTED_CFLAGS) $(INCLUDES) -c -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 $(HEADERS):
 	touch $@

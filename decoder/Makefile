@@ -10,41 +10,58 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	aivdm
-CC			=	gcc
-C_FLAGS		=	-g -Wall -Werror -Wextra
-LIB_FOLDER	=	lib
-INCLUDES	=	-I $(LIB_FOLDER)
-LIB			=	-L $(LIB_FOLDER) -l ft -l ftprintf -l sqlite3
+APP_NAMES		=	aivdm
+CC				=	clang
+CFLAGS			=	-g -Wall -Werror -Wextra
+SRC				=	src
+OBJ				=	obj
+INCLUDE			=	include
+FOLDERS			=	$(SRC) $(OBJ) $(INCLUDE)
+LIB_FOLDER		=	lib
+INCLUDES		=	-I $(LIB_FOLDER)
+LIBS			=	libftprintf.a libft.a libjk.a libsqlite3.a \
+					libssl.a libcrypto.a
+TMP_LIB_FILES	=	$(patsubst lib%.a, %, $(LIBS))
+LIB_FILES		=	$(addprefix -l , $(patsubst lib%.so, %, $(TMP_LIB_FILES)))
+INCLUDES		=	-I $(INCLUDE) -I $(LIB_FOLDER)
 
-SRC			=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c \
-				payload_parser.c
+MAIN_C_FILES	=	$(addprefix $(SRC)/, $(patsubst %, %.c, $(APP_NAMES)))
+C_FILE_NAMES	=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c \
+					payload_parser.c setup_influxdb_connection.c \
+					write_influxdb.c
+C_FILES			=	$(addprefix $(SRC)/, $(C_FILE_NAMES))
+H_FILES			=	aivdm.h message_123.h
+HEADERS			=	$(addprefix $(INCLUDE)/, $(H_FILES))
+OBJECTS			=	$(addprefix $(OBJ)/, $(patsubst %.c, %.o, $(C_FILE_NAMES)))
 
-HEADERS		=	*.h
+all: $(FOLDERS) $(MAIN_C_FILES) $(C_FILES) $(APP_NAMES)
+	@echo "$(GREEN)Done!$(END)"
 
-SRC_FOLDER	=	src
+$(APP_NAMES): %: $(SRC)/%.c $(OBJECTS) $(HEADERS) $(MAIN_C_FILES)
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $< $(OBJECTS) \
+							-L $(LIB_FOLDER) $(LIB_FILES)
 
-NAME_MAIN	=	$(SRC_FOLDER)/aivdm.c
+$(OBJECTS): $(OBJ)/%.o: $(SRC)/%.c $(HEADERS)
+	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
-HEADER_LIST	=	$(addprefix $(SRC_FOLDER)/, $(HEADERS))
+$(HEADERS):
+	touch $@
 
-OBJ_FOLDER	=	obj
-OBJ			=	$(addprefix $(OBJ_FOLDER)/, $(patsubst %.c, %.o, $(SRC)))
+$(MAIN_C_FILES):
+	touch $@
 
-all: make_lib $(NAME)
+$(C_FILES):
+	touch $@
 
-$(NAME): $(OBJ) $(NAME_MAIN) $(HEADER_LIST)
-	@echo "$@ created."
-	@$(CC) $(C_FLAGS) $(INCLUDES) -o $@ $(OBJ) $(NAME_MAIN) $(LIB)
+$(FOLDERS):
+	mkdir $@
 
-$(OBJ): $(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c $(HEADER_LIST) | $(OBJ_FOLDER)
-	@echo "$(@) created."
-	@$(CC) $(C_FLAGS) $(INCLUDES) -c -o $@ $<
+clean:
+	rm -f $(OBJECTS)
 
-$(OBJ_FOLDER):
-	@mkdir $(OBJ_FOLDER)
+fclean: clean
+	rm -f $(APP_NAMES)
 
-make_lib:
-	@make -C ${LIB_FOLDER}
+re: fclean all
 
-.PHONY: all make_lib
+.PHONY: all clean fclean re
