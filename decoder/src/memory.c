@@ -12,16 +12,13 @@
 
 #include "aivdm.h"
 
-void		release_string_array(char **str_array)
+void		release_string_array(char **str_array, size_t num_of_fields)
 {
-	size_t		i;
-
-	i = -1;
 	if (str_array)
 	{
-		while (str_array[++i])
-			free(str_array[i]);
-		free(str_array);
+		while(num_of_fields--)
+			ft_memdel((void **)&str_array[num_of_fields]);
+		ft_memdel((void **)str_array);
 	}
 	return ;
 }

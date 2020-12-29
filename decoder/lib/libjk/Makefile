@@ -1,6 +1,7 @@
 NAME				=	libjk.a
 LIB_FOLDER			=	..
 CFLAGS				=	-g -Wall -Werror -Wextra
+CC					=	clang
 AR_FILE				=	$(LIB_FOLDER)/$(NAME)
 SRC					=	src
 OBJ					=	obj

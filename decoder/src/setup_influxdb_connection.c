@@ -1,6 +1,6 @@
 #include "aivdm.h"
 
-static	void		set_client_socket_params(int socket_fd)
+static	void				set_client_socket_params(int socket_fd)
 {
 	t_timeval		timeout;
 	int				on;
@@ -14,29 +14,29 @@ static	void		set_client_socket_params(int socket_fd)
 	return ;
 }
 
-static t_tls_session	*init_tls_session(t_tls_connection *tls_connection)
+static t_influx_session		*init_influx_session(t_tls_connection *tls_connection)
 {
-	t_tls_session		*tls_session;
+	t_influx_session		*influx_session;
 
-	tls_session = (t_tls_session *)ft_memalloc(sizeof(*tls_session));
-	tls_session->connection = tls_connection;
-	tls_session->connection_status = e_waiting_msg2;
-	return(tls_session);
+	influx_session = (t_influx_session *)ft_memalloc(sizeof(*influx_session));
+	influx_session->connection = tls_connection;
+	influx_session->connection_status = e_waiting_msg2;
+	return(influx_session);
 }
 
-t_tls_session			*setup_influxdb_connection(char *host_name,
+t_influx_session			*setup_influxdb_connection(char *host_name,
 															char *port_number)
 {
 	t_tls_connection	*tls_connection;
 	SSL_CTX				*ctx;
 	int					socket_fd;
-	t_tls_session		*tls_session;
+	t_influx_session	*influx_session;
 	char				read_buf[BUF_MAX_SIZE];
 	int					chars;
 
 	jk_init_openssl();
 	tls_connection = NULL;
-	tls_session = NULL;
+	influx_session = NULL;
 	while (!tls_connection)
 	{
 		ctx = jk_start_tls_client(PEM_CERT_FILE, PEM_PRIVTE_KEY_FILE,
@@ -44,10 +44,10 @@ t_tls_session			*setup_influxdb_connection(char *host_name,
 		tls_connection = jk_setup_tls_connection(host_name, port_number,
 																socket_fd, ctx);
 		set_client_socket_params(socket_fd);
-		tls_session = init_tls_session(tls_connection);
-		tls_session->connection_status = e_send_msg0;
+		influx_session = init_influx_session(tls_connection);
+		influx_session->connection_status = e_send_msg0;
 	}
 	while((chars = SSL_read(tls_connection->ssl_bio, read_buf, BUF_MAX_SIZE)) > 0)
 			ft_printf("%s\n", read_buf);
-	return(tls_session);
+	return(influx_session);
 }

@@ -199,26 +199,25 @@ static void		count_mmsi_mid(t_statistics *statistics, int mmsi, sqlite3 *db,
 
 int				main(int argc, char **argv)
 {
-	char			*line;
-	char			**aivdm_record_array;
-	size_t			ok_cnt;
-	t_message_id	*message_id;
-	char			*ais_data;
-	t_statistics	*statistics;
-	t_opt			*opt;
-	char			*payload_string;
-	char			*payload_string_tmp;
-	int				payload_string_length;
-	char			*padding;
-	t_message_123	*message_123;
-	sqlite3			*db;
-	int				payload_max_length;
-	int				ais_dispatcher_timestamp;
-	char			body[BUF_MAX_SIZE];
-	t_tls_session	*tls_session;
+	char				*line;
+	char				**aivdm_record_array;
+	size_t				ok_cnt;
+	t_message_id		*message_id;
+	char				*ais_data;
+	t_statistics		*statistics;
+	t_opt				*opt;
+	char				*payload_string;
+	char				*payload_string_tmp;
+	int					payload_string_length;
+	char				*padding;
+	t_message_123		*message_123;
+	sqlite3				*db;
+	int					payload_max_length;
+	int					ais_dispatcher_timestamp;
+	t_influx_session	*influx_session;
 
 	ft_step_args(&argc, &argv);
-	tls_session = setup_influxdb_connection("127.0.0.1", "8086");
+	influx_session = setup_influxdb_connection("52.23.5.140", "8086");
 	open_sqlite3(&db);
 	opt = (t_opt *)ft_memalloc(sizeof(*opt));
 	ft_read_opt(opt, &argc, &argv);
@@ -235,8 +234,7 @@ int				main(int argc, char **argv)
 		aivdm_record_array = parse_input_line(line, message_123);
 		if (ais_dispatcher_timestamp)
 			message_123->timestamp.ais_dispatcher = ais_dispatcher_timestamp;
-		if (aivdm_record_array && !validate_input_record(aivdm_record_array,
-																line, &ok_cnt))
+		if(aivdm_record_array)
 		{
 			if (*aivdm_record_array[2] == '1')
 			{
@@ -268,24 +266,21 @@ int				main(int argc, char **argv)
 							(t_message_type)message_id->message_id <= e_3_position_report)
 					{
 						parse_message_123(ais_data, message_123);
+						store_message_123(influx_session, message_123);
 						if (message_123->speed_over_ground >= 0)
 						{
-//							ft_printf("SOG: %.1f\n", message_123->speed_over_ground);
 							insert_message_123(db, line, message_123);
 						}
 						count_mmsi_mid(statistics, message_123->mmsi, db, payload_max_length);
-						sprintf(body, "noise,host=%s random=%.3f   \n", "blue",
-												((double)(random())/1000.0));
-						write_influxdb(tls_session->connection, body, "Test_01");
-						usleep(4000 * 1000);
+						usleep(500 * 1000);
 					}
 				}
 				ft_strdel(&payload_string);
 				free(ais_data);
 			}
+			release_string_array(aivdm_record_array, NUM_OF_FIELDS);
 		}
 		ft_strdel(&line);
-		release_string_array(aivdm_record_array);
 	}
 	close_sqlite3(db);
 	ft_strdel(&payload_string);

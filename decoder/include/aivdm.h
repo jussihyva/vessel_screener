@@ -16,6 +16,7 @@
 # include "libjk.h"
 # include "ft_printf.h"
 # include <stdio.h>
+# include <string.h>
 # include <time.h>
 # include "errno.h"
 # include <fcntl.h>
@@ -27,8 +28,8 @@
 # define NUM_OF_FIELDS 7
 # define MAX_NUM_OF_MESSAGE_TYPES 50
 # define COUNTRIES 1000
-# define PEM_CERT_FILE			"/home/ubuntu/.ssh/enclave_certificate.pem"
-# define PEM_PRIVTE_KEY_FILE	"/home/ubuntu/.ssh/enclave_key.pem"
+# define PEM_CERT_FILE			"/home/user/.ssh/enclave_certificate.pem"
+# define PEM_PRIVTE_KEY_FILE	"/home/user/.ssh/enclave_key.pem"
 # define BUF_MAX_SIZE			8192
 # define MESSAGE_BUF_SIZE		BUF_MAX_SIZE + 4096
 # define USERNAME "matti"
@@ -51,11 +52,11 @@ typedef enum					e_connection_status
 	e_send_msg0
 }								t_connection_status;
 
-typedef struct					s_tls_session
+typedef struct					s_influx_session
 {
 	void					*connection;
 	t_connection_status		connection_status;
-}								t_tls_session;
+}								t_influx_session;
 
 typedef enum		e_flags
 {
@@ -132,10 +133,10 @@ typedef struct		s_message_123
 void				ft_step_args(int *argc, char ***argv);
 void				ft_read_opt(t_opt *opt, int *argc, char ***argv);
 int					validate_input_record(char **aivdm_record_array, char *line,
-																size_t *ok_cnt);
+													size_t number_of_fields);
 void				print_hex(char *file_content, ssize_t size);
 void				print_bin(char *file_content, ssize_t size);
-void				release_string_array(char **str_array);
+void				release_string_array(char **str_array, size_t num_of_fields);
 void				parse_message_123(char *ais_data, t_message_123 *message_123);
 void				open_sqlite3(sqlite3 **db);
 void				close_sqlite3(sqlite3 *db);
@@ -144,8 +145,10 @@ char				**parse_input_line(char *line, t_message_123 *message_123);
 void				print_message_123(char *line, t_message_123 *message_123);
 void				insert_message_123(sqlite3 *db, char *line,
 													t_message_123 *message_123);
-t_tls_session		*setup_influxdb_connection(char *host_name, char *port_number);
+t_influx_session	*setup_influxdb_connection(char *host_name, char *port_number);
 void				write_influxdb(t_tls_connection *tls_connection,
 													char *body, char *database);
+void				store_message_123(t_influx_session *influx_session,
+													t_message_123 *message_123);
 
 #endif

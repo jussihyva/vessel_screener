@@ -28,7 +28,7 @@ INCLUDES		=	-I $(INCLUDE) -I $(LIB_FOLDER)
 MAIN_C_FILES	=	$(addprefix $(SRC)/, $(patsubst %, %.c, $(APP_NAMES)))
 C_FILE_NAMES	=	print_hex.c input.c memory.c message_123.c ft_sqlite3.c \
 					payload_parser.c setup_influxdb_connection.c \
-					write_influxdb.c
+					write_influxdb.c store_messages.c
 C_FILES			=	$(addprefix $(SRC)/, $(C_FILE_NAMES))
 H_FILES			=	aivdm.h message_123.h
 HEADERS			=	$(addprefix $(INCLUDE)/, $(H_FILES))

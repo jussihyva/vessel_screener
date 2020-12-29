@@ -53,33 +53,28 @@ void			ft_read_opt(t_opt *opt, int *argc, char ***argv)
 }
 
 int				validate_input_record(char **aivdm_record_array, char *line,
-																size_t *ok_cnt)
+														size_t number_of_fields)
 {
 	t_error_code	error;
-	size_t			number_of_fields;
 	char			validate_char;
 
 	error = 0;
-	number_of_fields = -1;
-	while (aivdm_record_array[++number_of_fields])
-		;
 	if (number_of_fields && ft_strcmp(aivdm_record_array[0], "!AIVDM"))
 		error = e_unknown_message_type;
-	else if (number_of_fields != NUM_OF_FIELDS)
+	else if ((number_of_fields != NUM_OF_FIELDS) &&
+						(number_of_fields != NUM_OF_FIELDS + 1))
 		error = e_invalid_num_of_fields;
 	else
 	{
 		validate_char = aivdm_record_array[number_of_fields - 1][1];
 		if (validate_char != '*')
 			error = e_invalid_check_sum;
-		else
-		{
-			(*ok_cnt)++;
-			if (!(*ok_cnt % PRINT_OK))
-				ft_printf("OK (%d)\n", *ok_cnt);
-		}
 	}
 	if (error && *line)
-		ft_printf("ERROR (%s)\n", line);
+	{
+		ft_printf("ERROR(%d): (%s)\n", error, line);
+		if(error == e_invalid_num_of_fields)
+			ft_printf("    Number of fields: (%d)\n", number_of_fields);
+	}
 	return (error);
 }

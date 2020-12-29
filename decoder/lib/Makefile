@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-LIB_FILES			=	libft.a libjk.a
+LIB_FILES			=	libft.a libjk.a libftprintf.a
 H_FILES				=	$(patsubst %.a, %.h, $(LIB_FILES))
 LIB_FOLDERS			=	$(patsubst %.a, %, $(LIB_FILES))
 

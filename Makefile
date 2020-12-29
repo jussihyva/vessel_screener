@@ -53,3 +53,9 @@ open-http:
 start-all: build-ws
 	make -j 4 seed-ws run-http run-ws open-http
 .PHONY: start-all
+
+
+# RUN
+
+run:
+	cat assets/logs/aivdm_1.log | ./decoder/aivdm

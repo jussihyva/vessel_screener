@@ -13,5 +13,7 @@ SSL_CTX			*jk_start_tls_client(char *pem_cert_file,
 		if(!ctx)
 			close(*socket_fd);
 	}
+	else
+		ctx = NULL;
 	return(ctx);
 }

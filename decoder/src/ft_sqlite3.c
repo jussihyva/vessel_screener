@@ -40,8 +40,9 @@ void			insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123)
 	char		*error_message;
 	int			error_code;
 
+	(void)line;
 	error_message = NULL;
-	print_message_123(line, message_123);
+	// print_message_123(line, message_123);
 	if (message_123->message_id >= 1 && message_123->message_id <= 3)
 	{
 		sql_query_string = (char *)ft_memalloc(sizeof(*sql_query_string) * 100000);
@@ -66,7 +67,7 @@ void			insert_message_123(sqlite3 *db, char *line, t_message_123 *message_123)
 		{
 			;
 		}
-		ft_printf("%s\n", sql_query_string);
+		// ft_printf("%s\n", sql_query_string);
 		ft_strdel(&sql_query_string);
 	}
 	return ;

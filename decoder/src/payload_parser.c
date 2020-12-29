@@ -44,10 +44,24 @@ static char		*search_record_start_point(char *line, t_message_123 *message_123)
 char			**parse_input_line(char *line, t_message_123 *message_123)
 {
 	char	*start_ptr;
-	char	**aivdm_record;
+	char	**aivdm_record_array;
+	char	*token;
+	size_t	number_of_fields;
 
+	aivdm_record_array = (char **)ft_memalloc(sizeof(*aivdm_record_array) *
+																NUM_OF_FIELDS);
 	remove_cr_char(line);
 	start_ptr = search_record_start_point(line, message_123);
-	aivdm_record = (char **)ft_strsplit(start_ptr, ',');
-	return (aivdm_record);
+	number_of_fields = 0;
+	token = strsep(&start_ptr, ",");
+	while(token)
+	{
+		aivdm_record_array[number_of_fields] = strdup(token);
+		number_of_fields++;
+		token = strsep(&start_ptr, ",");
+	}
+	if (!(aivdm_record_array && !validate_input_record(aivdm_record_array,
+														line, number_of_fields)))
+		release_string_array(aivdm_record_array, NUM_OF_FIELDS);
+	return (aivdm_record_array);
 }
